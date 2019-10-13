@@ -65,7 +65,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <ImageView
-        android:id="@+id/ivProfileImage"
+        android:id="@+id/ivProfile"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginTop="16dp"
@@ -84,9 +84,9 @@
         android:text="@string/change_photo"
         android:textColor="@color/colorAccent"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@+id/ivProfileImage"
-        app:layout_constraintStart_toStartOf="@+id/ivProfileImage"
-        app:layout_constraintTop_toBottomOf="@+id/ivProfileImage" />
+        app:layout_constraintEnd_toEndOf="@+id/ivProfile"
+        app:layout_constraintStart_toStartOf="@+id/ivProfile"
+        app:layout_constraintTop_toBottomOf="@+id/ivProfile" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/layout_name"

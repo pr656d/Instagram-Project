@@ -4,7 +4,10 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import androidx.lifecycle.Observer
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.mindorks.bootcamp.instagram.R
 import com.mindorks.bootcamp.instagram.di.component.FragmentComponent
 import com.mindorks.bootcamp.instagram.ui.base.BaseFragment
@@ -12,6 +15,7 @@ import com.mindorks.bootcamp.instagram.ui.login.LoginActivity
 import com.mindorks.bootcamp.instagram.ui.main.MainSharedViewModel
 import com.mindorks.bootcamp.instagram.ui.profile.edit.EditProfileActivity
 import com.mindorks.bootcamp.instagram.utils.common.Constants
+import com.mindorks.bootcamp.instagram.utils.common.GlideHelper
 import com.mindorks.bootcamp.instagram.utils.common.Status
 import kotlinx.android.synthetic.main.fragment_profile.*
 import javax.inject.Inject
@@ -55,6 +59,27 @@ class ProfileFragment : BaseFragment<ProfileViewModel>() {
             it.getIfNotHandled()?.run {
                 startActivity(Intent(context!!.applicationContext, LoginActivity::class.java))
                 mainSharedViewModel.onLogout()
+            }
+        })
+
+        viewModel.profileImage.observe(this, Observer {
+            it?.run {
+                val glideRequest = Glide
+                    .with(ivProfile.context)
+                    .load(GlideHelper.getProtectedUrl(url, headers))
+                    .apply(RequestOptions.circleCropTransform())
+                    .apply(RequestOptions.placeholderOf(R.drawable.ic_profile_selected))
+
+                if (placeholderWidth > 0 && placeholderHeight > 0) {
+                    val params = ivProfile.layoutParams as ViewGroup.LayoutParams
+                    params.width = placeholderWidth
+                    params.height = placeholderHeight
+                    ivProfile.layoutParams = params
+                    glideRequest
+                        .apply(RequestOptions.overrideOf(placeholderWidth, placeholderHeight))
+                        .apply(RequestOptions.placeholderOf(R.drawable.ic_profile_unselected))
+                }
+                glideRequest.into(ivProfile)
             }
         })
 
