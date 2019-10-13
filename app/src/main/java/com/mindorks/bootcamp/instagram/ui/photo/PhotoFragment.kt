@@ -21,7 +21,7 @@ class PhotoFragment : BaseFragment<PhotoViewModel>() {
     companion object {
 
         const val TAG = "PhotoFragment"
-        const val RESULT_GALLERY_IMG = 10
+        const val RESULT_GALLERY_IMG = 11
 
         fun newInstance(): PhotoFragment {
             val args = Bundle()
@@ -63,7 +63,7 @@ class PhotoFragment : BaseFragment<PhotoViewModel>() {
         view_gallery.setOnClickListener {
             Intent(Intent.ACTION_PICK)
                 .apply {
-                    type = "profilePic/*"
+                    type = "image/*"
                 }.run {
                     startActivityForResult(this, RESULT_GALLERY_IMG)
                 }

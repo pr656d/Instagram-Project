@@ -149,9 +149,7 @@ class EditProfileActivity : BaseActivity<EditProfileViewModel>() {
                 Constants.CHANGE_PHOTO_CODE -> {
                     data?.extras
                         ?.getString(ChangePhotoActivity.PHOTO_URL, null)
-                        ?.let {
-                            viewModel.onProfileUrlChanged(it)
-                        }
+                        ?.let { viewModel.onProfileUrlChanged(it) }
                 }
             }
         }

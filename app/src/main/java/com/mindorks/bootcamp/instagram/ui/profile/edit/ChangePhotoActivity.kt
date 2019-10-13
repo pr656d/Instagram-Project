@@ -34,7 +34,7 @@ class ChangePhotoActivity : BaseActivity<ChangePhotoViewModel>() {
         view_gallery.setOnClickListener {
             Intent(Intent.ACTION_PICK)
                 .apply {
-                    type = "profilePic/*"
+                    type = "image/*"
                 }.run {
                     startActivityForResult(this, Constants.GALLERY_IMG_CODE)
                 }
@@ -85,7 +85,6 @@ class ChangePhotoActivity : BaseActivity<ChangePhotoViewModel>() {
                             }
                         } ?: showMessage(R.string.try_again)
                     } catch (e: FileNotFoundException) {
-                        e.printStackTrace()
                         showMessage(R.string.try_again)
                     }
                 }
