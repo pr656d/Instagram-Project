@@ -34,7 +34,7 @@ class ChangePhotoActivity : BaseActivity<ChangePhotoViewModel>() {
         view_gallery.setOnClickListener {
             Intent(Intent.ACTION_PICK)
                 .apply {
-                    type = "image/*"
+                    type = "profilePic/*"
                 }.run {
                     startActivityForResult(this, Constants.GALLERY_IMG_CODE)
                 }

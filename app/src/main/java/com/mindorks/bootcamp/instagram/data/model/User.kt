@@ -22,6 +22,6 @@ data class User(
     val accessToken: String,
 
     @Expose
-    @SerializedName("image")
+    @SerializedName("profilePic")
     val profilePicUrl: String? = null
 )

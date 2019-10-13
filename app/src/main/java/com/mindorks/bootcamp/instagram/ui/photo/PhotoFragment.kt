@@ -63,7 +63,7 @@ class PhotoFragment : BaseFragment<PhotoViewModel>() {
         view_gallery.setOnClickListener {
             Intent(Intent.ACTION_PICK)
                 .apply {
-                    type = "image/*"
+                    type = "profilePic/*"
                 }.run {
                     startActivityForResult(this, RESULT_GALLERY_IMG)
                 }

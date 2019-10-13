@@ -9,7 +9,7 @@ data class UpdateProfileRequest(
     val name: String? = null,
 
     @Expose
-    @SerializedName("image")
+    @SerializedName("profilePic")
     val profilePicUrl: String? = null,
 
     @Expose

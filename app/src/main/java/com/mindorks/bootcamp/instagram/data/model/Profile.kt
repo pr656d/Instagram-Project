@@ -13,8 +13,8 @@ data class Profile(
     var name: String? = null,
 
     @Expose
-    @SerializedName("image")
-    val image: Image,
+    @SerializedName("profilePicUrl")
+    val profilePicUrl: String?,
 
     @Expose
     @SerializedName("tagline")

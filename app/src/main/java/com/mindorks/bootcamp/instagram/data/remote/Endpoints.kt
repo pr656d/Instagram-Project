@@ -17,7 +17,7 @@ object Endpoints {
     const val PROFILE = "me"
 
     // Upload Image & Create Post
-    const val UPLOAD_IMAGE = "image"
+    const val UPLOAD_IMAGE = "profilePic"
     const val CREATE_POST = "instagram/post"
 
     // Logout

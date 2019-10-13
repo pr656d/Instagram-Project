@@ -13,7 +13,7 @@ class PhotoRepository @Inject constructor(private val networkService: NetworkSer
 
     fun uploadPhoto(file: File, user: User): Single<String> =
         MultipartBody.Part.createFormData(
-            "image", file.name, RequestBody.create(MediaType.get("image/*"), file)
+            "profilePic", file.name, RequestBody.create(MediaType.get("profilePic/*"), file)
         ).run {
             return@run networkService.doImageUpload(this, user.id, user.accessToken)
                 .map { it.data.imageUrl }

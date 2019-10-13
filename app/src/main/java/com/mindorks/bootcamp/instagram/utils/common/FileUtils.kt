@@ -40,7 +40,7 @@ object FileUtils  {
 
     fun getImageSize(file: File): Pair<Int, Int>? {
         try {
-            // Decode image size
+            // Decode profilePic size
             val o = BitmapFactory.Options()
             o.inJustDecodeBounds = true
             BitmapFactory.decodeStream(FileInputStream(file), null, o)

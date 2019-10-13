@@ -94,7 +94,7 @@ class EditProfileActivity : BaseActivity<EditProfileViewModel>() {
             }
         })
 
-        viewModel.image.observe(this, Observer {
+        viewModel.profilePic.observe(this, Observer {
 
         })
 

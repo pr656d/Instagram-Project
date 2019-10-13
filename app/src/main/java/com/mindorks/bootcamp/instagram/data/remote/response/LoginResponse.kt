@@ -33,7 +33,7 @@ data class LoginResponse(
     var userEmail: String,
 
     @Expose
-    @SerializedName("image")
+    @SerializedName("profilePic")
     var profilePicUrl: String?
 
 )

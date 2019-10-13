@@ -33,7 +33,7 @@ class EditProfileViewModel(
 
     val nameField: MutableLiveData<String> = MutableLiveData()
     val bioField: MutableLiveData<String> = MutableLiveData()
-    val image: MutableLiveData<Image> = MutableLiveData()
+    val profilePic: MutableLiveData<Image> = MutableLiveData()
     val emailField: MutableLiveData<String> = MutableLiveData()
 
     val loading: MutableLiveData<Boolean> = MutableLiveData()
@@ -52,8 +52,8 @@ class EditProfileViewModel(
     fun onChangePhotoClicked() = openDialogBox.postValue(Event(Unit))
 
     fun onProfileUrlChanged(url: String) {
-        if (image.value?.url != url)
-            image.postValue(Image(url, headers))
+        if (profilePic.value?.url != url)
+            profilePic.postValue(Image(url, headers))
     }
 
     override fun onCreate() {
@@ -64,10 +64,10 @@ class EditProfileViewModel(
         loading.postValue(true)
 
         val name: String? = nameField.value
-        val profilePicUrl: String? = image.value?.url
+        val profilePicUrl: String? = profilePic.value?.url
         val bio: String? = bioField.value
 
-        val newProfile = Profile(profile.id, name, image.value!!, bio)
+        val newProfile = Profile(profile.id, name, profilePicUrl, bio)
 
         Logger.d(EditProfileActivity.TAG, "$newProfile")
 
@@ -97,12 +97,12 @@ class EditProfileViewModel(
                 .subscribeOn(schedulerProvider.io())
                 .subscribe(
                     {
-                        profile = Profile(it.id, it.name, it.image, it.bio)
+                        profile = Profile(it.id, it.name, it.profilePicUrl, it.bio)
 
                         nameField.postValue(it.name)
                         emailField.postValue(user.email)
                         bioField.postValue(it.bio)
-                        image.postValue(it.image)
+//                        profilePic.postValue(it.profilePicUrl)
 
                         loading.postValue(false)
                     },

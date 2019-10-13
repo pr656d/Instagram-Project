@@ -1,7 +1,6 @@
 package com.mindorks.bootcamp.instagram.ui.profile
 
 import androidx.lifecycle.MutableLiveData
-import com.mindorks.bootcamp.instagram.data.model.Image
 import com.mindorks.bootcamp.instagram.data.model.User
 import com.mindorks.bootcamp.instagram.data.remote.Networking
 import com.mindorks.bootcamp.instagram.data.repository.ProfileRepository
@@ -36,7 +35,6 @@ class ProfileViewModel(
     val loggingIn: MutableLiveData<Boolean> = MutableLiveData()
     val name: MutableLiveData<String> = MutableLiveData()
     val bio: MutableLiveData<String> = MutableLiveData()
-    val image: MutableLiveData<Image> = MutableLiveData()
 
     val loggingOut: MutableLiveData<Resource<Boolean>> = MutableLiveData()
 
