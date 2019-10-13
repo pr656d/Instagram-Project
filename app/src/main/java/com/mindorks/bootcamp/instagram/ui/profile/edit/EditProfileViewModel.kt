@@ -1,6 +1,8 @@
 package com.mindorks.bootcamp.instagram.ui.profile.edit
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import com.mindorks.bootcamp.instagram.data.model.Image
 import com.mindorks.bootcamp.instagram.data.model.Profile
 import com.mindorks.bootcamp.instagram.data.model.User
@@ -33,8 +35,12 @@ class EditProfileViewModel(
 
     val nameField: MutableLiveData<String> = MutableLiveData()
     val bioField: MutableLiveData<String> = MutableLiveData()
-    val profilePic: MutableLiveData<Image> = MutableLiveData()
     val emailField: MutableLiveData<String> = MutableLiveData()
+    val profilePicUrl: MutableLiveData<String> = MutableLiveData()
+
+    val profileImage: LiveData<Image> = Transformations.map(profilePicUrl) {
+        it?.run { Image(this, headers) }
+    }
 
     val loading: MutableLiveData<Boolean> = MutableLiveData()
     val openDialogBox: MutableLiveData<Event<Unit>> = MutableLiveData()
@@ -52,8 +58,8 @@ class EditProfileViewModel(
     fun onChangePhotoClicked() = openDialogBox.postValue(Event(Unit))
 
     fun onProfileUrlChanged(url: String) {
-        if (profilePic.value?.url != url)
-            profilePic.postValue(Image(url, headers))
+        if (profileImage.value?.url != url)
+            profilePicUrl.postValue(url)
     }
 
     override fun onCreate() {
@@ -64,7 +70,7 @@ class EditProfileViewModel(
         loading.postValue(true)
 
         val name: String? = nameField.value
-        val profilePicUrl: String? = profilePic.value?.url
+        val profilePicUrl: String? = profileImage.value?.url
         val bio: String? = bioField.value
 
         val newProfile = Profile(profile.id, name, profilePicUrl, bio)
@@ -102,7 +108,7 @@ class EditProfileViewModel(
                         nameField.postValue(it.name)
                         emailField.postValue(user.email)
                         bioField.postValue(it.bio)
-//                        profilePic.postValue(it.profilePicUrl)
+                        profilePicUrl.postValue(it.profilePicUrl)
 
                         loading.postValue(false)
                     },
