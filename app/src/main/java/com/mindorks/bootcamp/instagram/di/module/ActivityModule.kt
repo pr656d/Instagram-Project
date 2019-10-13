@@ -10,8 +10,8 @@ import com.mindorks.bootcamp.instagram.ui.base.BaseActivity
 import com.mindorks.bootcamp.instagram.ui.login.LoginViewModel
 import com.mindorks.bootcamp.instagram.ui.main.MainSharedViewModel
 import com.mindorks.bootcamp.instagram.ui.main.MainViewModel
-import com.mindorks.bootcamp.instagram.ui.profile.edit.EditProfileViewModel
 import com.mindorks.bootcamp.instagram.ui.profile.edit.ChangePhotoViewModel
+import com.mindorks.bootcamp.instagram.ui.profile.edit.EditProfileViewModel
 import com.mindorks.bootcamp.instagram.ui.signup.SignupViewModel
 import com.mindorks.bootcamp.instagram.ui.splash.SplashViewModel
 import com.mindorks.bootcamp.instagram.utils.ViewModelProviderFactory

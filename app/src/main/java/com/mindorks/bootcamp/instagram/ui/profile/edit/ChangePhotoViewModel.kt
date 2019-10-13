@@ -20,7 +20,7 @@ class ChangePhotoViewModel(
     schedulerProvider: SchedulerProvider,
     compositeDisposable: CompositeDisposable,
     networkHelper: NetworkHelper,
-    private val userRepository: UserRepository,
+    userRepository: UserRepository,
     private val photoRepository: PhotoRepository,
     private val directory: File
 ) : BaseViewModel(schedulerProvider, compositeDisposable, networkHelper) {
