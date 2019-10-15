@@ -129,7 +129,7 @@ class ProfileFragment : BaseFragment<ProfileViewModel>() {
         })
 
         viewModel.bio.observe(this, Observer {
-            tvTagline.text = it
+            tvBio.text = it
         })
 
         viewModel.loggingIn.observe(this, Observer {
