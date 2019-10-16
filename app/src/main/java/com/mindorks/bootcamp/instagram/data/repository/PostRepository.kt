@@ -67,8 +67,16 @@ class PostRepository @Inject constructor(
         }
     }
 
-    fun createPost(imgUrl: String, imgWidth: Int, imgHeight: Int, user: User): Single<Post> =
-        networkService.doPostCreationCall(
+    fun makeDeletePost(post: MyPost, user: User): Single<Boolean> {
+        return networkService.doDeletePostCall(
+            post.id,
+            user.id,
+            user.accessToken
+        ).map { it.statusCode == "success" }
+    }
+
+    fun createPost(imgUrl: String, imgWidth: Int, imgHeight: Int, user: User): Single<Post> {
+        return networkService.doPostCreationCall(
             PostCreationRequest(imgUrl, imgWidth, imgHeight), user.id, user.accessToken
         ).map {
             Post(
@@ -85,5 +93,5 @@ class PostRepository @Inject constructor(
                 it.data.createdAt
             )
         }
-
+    }
 }

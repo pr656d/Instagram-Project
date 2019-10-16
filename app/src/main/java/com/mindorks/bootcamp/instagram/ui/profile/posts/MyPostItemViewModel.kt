@@ -24,7 +24,7 @@ class MyPostItemViewModel @Inject constructor(
     networkHelper: NetworkHelper,
     userRepository: UserRepository,
     private val postRepository: PostRepository
-): BaseItemViewModel<MyPost>(schedulerProvider, compositeDisposable, networkHelper) {
+) : BaseItemViewModel<MyPost>(schedulerProvider, compositeDisposable, networkHelper) {
 
     companion object {
         const val TAG = "MyPostItemViewModel"
@@ -40,7 +40,8 @@ class MyPostItemViewModel @Inject constructor(
     )
 
     val name = user.name
-    val postTime: LiveData<String> = Transformations.map(data) { TimeUtils.getTimeAgo(it.createdAt) }
+    val postTime: LiveData<String> =
+        Transformations.map(data) { TimeUtils.getTimeAgo(it.createdAt) }
 //    val profileImage: LiveData<Image> = Transformations.map(data) {
 //        Logger.d("PostItemVM", "${it.creator.profilePicUrl}")
 //        it.creator.profilePicUrl?.run { Image(this, headers) }
@@ -65,14 +66,18 @@ class MyPostItemViewModel @Inject constructor(
 
     fun onDeleteClick() = data.value?.let {
         if (networkHelper.isNetworkConnected()) {
-            messageString.postValue(Resource.success("Delete clicked"))
-//            compositeDisposable.add(api
-//                .subscribeOn(schedulerProvider.io())
-//                .subscribe(
-//                    { responsePost -> if (responsePost.id == it.id) updateData(responsePost) },
-//                    { error -> handleNetworkError(error) }
-//                )
-//            )
+            data.value?.let {
+                compositeDisposable.add(
+                    postRepository.makeDeletePost(it, user)
+                        .subscribeOn(schedulerProvider.io())
+                        .subscribe(
+                            { response ->
+                              if (response) messageString.postValue(Resource.success("Post DELETED"))
+                            },
+                            { error -> handleNetworkError(error) }
+                        )
+                )
+            }
         } else {
             messageStringId.postValue(Resource.error(R.string.network_connection_error))
         }

@@ -1,8 +1,6 @@
 package com.mindorks.bootcamp.instagram.data.remote
 
 object Endpoints {
-    // Dummy
-    const val DUMMY = "dummy/list"
 
     // Login & Signup
     const val LOGIN = "login/mindorks"
@@ -15,6 +13,7 @@ object Endpoints {
 
     // My Post
     const val MY_POST = "instagram/post/my"
+    const val POST_DELETE = "instagram/post/id/{postId}"
 
     // User
     const val PROFILE = "me"
