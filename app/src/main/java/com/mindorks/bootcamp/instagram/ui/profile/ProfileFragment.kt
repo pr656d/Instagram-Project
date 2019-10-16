@@ -144,6 +144,10 @@ class ProfileFragment : BaseFragment<ProfileViewModel>() {
             it.data?.run { postsAdapter.appendData(this) }
         })
 
+        viewModel.postCount.observe(this, Observer {
+            tvPostCount.text = it.toString()
+        })
+
         viewModel.loading.observe(this, Observer {
             progressBar.visibility = if (it) View.VISIBLE else View.GONE
         })

@@ -42,11 +42,11 @@ class ProfileViewModel(
     val name: MutableLiveData<String> = MutableLiveData()
     val bio: MutableLiveData<String> = MutableLiveData()
     val profilePicUrl: MutableLiveData<String> = MutableLiveData()
-    val posts: MutableLiveData<Resource<List<MyPost>>> = MutableLiveData()
-
     val profileImage: LiveData<Image> = Transformations.map(profilePicUrl) {
         it?.run { Image(this, headers) }
     }
+    val posts: MutableLiveData<Resource<List<MyPost>>> = MutableLiveData()
+    val postCount: LiveData<Int> = Transformations.map(posts) { it.data?.count() }
 
     override fun onCreate() {
         fetchProfile()
