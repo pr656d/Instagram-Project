@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.mindorks.bootcamp.instagram.R
@@ -14,6 +15,7 @@ import com.mindorks.bootcamp.instagram.ui.base.BaseFragment
 import com.mindorks.bootcamp.instagram.ui.login.LoginActivity
 import com.mindorks.bootcamp.instagram.ui.main.MainSharedViewModel
 import com.mindorks.bootcamp.instagram.ui.profile.edit.EditProfileActivity
+import com.mindorks.bootcamp.instagram.ui.profile.posts.MyPostsAdapter
 import com.mindorks.bootcamp.instagram.utils.common.Constants
 import com.mindorks.bootcamp.instagram.utils.common.GlideHelper
 import com.mindorks.bootcamp.instagram.utils.common.Status
@@ -36,6 +38,12 @@ class ProfileFragment : BaseFragment<ProfileViewModel>() {
 
     @Inject
     lateinit var mainSharedViewModel: MainSharedViewModel
+
+    @Inject
+    lateinit var linearLayoutManager: LinearLayoutManager
+
+    @Inject
+    lateinit var postsAdapter: MyPostsAdapter
 
     override fun provideLayoutId(): Int = R.layout.fragment_profile
 
@@ -87,7 +95,7 @@ class ProfileFragment : BaseFragment<ProfileViewModel>() {
             when (it.status) {
                 Status.LOADING -> {
                     if (it.data!!) {
-                        pb_loading.visibility = View.VISIBLE
+                        progressBar.visibility = View.VISIBLE
 
                         tvLogout.apply {
                             setText(R.string.logging_out_text)
@@ -96,7 +104,7 @@ class ProfileFragment : BaseFragment<ProfileViewModel>() {
 
                         btnEditProfile.isEnabled = false
                     } else {
-                        pb_loading.visibility = View.GONE
+                        progressBar.visibility = View.GONE
 
                         tvLogout.apply {
                             setText(R.string.logout_profile_text)
@@ -107,7 +115,7 @@ class ProfileFragment : BaseFragment<ProfileViewModel>() {
                     }
                 }
                 Status.ERROR -> {
-                    pb_loading.visibility = View.GONE
+                    progressBar.visibility = View.GONE
 
                     tvLogout.apply {
                         setText(R.string.logout_profile_text)
@@ -132,8 +140,12 @@ class ProfileFragment : BaseFragment<ProfileViewModel>() {
             tvBio.text = it
         })
 
-        viewModel.loggingIn.observe(this, Observer {
-            pb_loading.visibility = if (it) View.VISIBLE else View.GONE
+        viewModel.posts.observe(this, Observer {
+            it.data?.run { postsAdapter.appendData(this) }
+        })
+
+        viewModel.loading.observe(this, Observer {
+            progressBar.visibility = if (it) View.VISIBLE else View.GONE
         })
     }
 
@@ -141,6 +153,11 @@ class ProfileFragment : BaseFragment<ProfileViewModel>() {
         tvLogout.setOnClickListener { viewModel.onLogoutClicked() }
 
         btnEditProfile.setOnClickListener { viewModel.onEditProfileClicked() }
+
+        rvPosts.apply {
+            layoutManager = linearLayoutManager
+            adapter = postsAdapter
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -50,6 +50,13 @@ interface NetworkService {
         @Header(Networking.HEADER_API_KEY) apiKey: String = Networking.API_KEY
     ): Single<PostListResponse>
 
+    @GET(Endpoints.MY_POST)
+    fun doMyPostListCall(
+        @Header(Networking.HEADER_USER_ID) userId: String,
+        @Header(Networking.HEADER_ACCESS_TOKEN) accessToken: String,
+        @Header(Networking.HEADER_API_KEY) apiKey: String = Networking.API_KEY
+    ): Single<MyPostListResponse>
+
     @PUT(Endpoints.POST_LIKE)
     fun doPostLikeCall(
         @Body request: PostLikeModifyRequest,

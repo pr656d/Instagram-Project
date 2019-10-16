@@ -27,8 +27,8 @@ class HomeViewModel(
     val posts: MutableLiveData<Resource<List<Post>>> = MutableLiveData()
     val refreshPosts: MutableLiveData<Resource<List<Post>>> = MutableLiveData()
 
-    var firstId: String? = null
-    var lastId: String? = null
+    private var firstId: String? = null
+    private var lastId: String? = null
 
     private val user: User = userRepository.getCurrentUser()!! // should not be used without logged in
 

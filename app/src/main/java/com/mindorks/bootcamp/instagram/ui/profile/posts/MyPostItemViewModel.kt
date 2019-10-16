@@ -1,10 +1,10 @@
-package com.mindorks.bootcamp.instagram.ui.home.posts
+package com.mindorks.bootcamp.instagram.ui.profile.posts
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import com.mindorks.bootcamp.instagram.R
 import com.mindorks.bootcamp.instagram.data.model.Image
-import com.mindorks.bootcamp.instagram.data.model.Post
+import com.mindorks.bootcamp.instagram.data.model.MyPost
 import com.mindorks.bootcamp.instagram.data.remote.Networking
 import com.mindorks.bootcamp.instagram.data.repository.PostRepository
 import com.mindorks.bootcamp.instagram.data.repository.UserRepository
@@ -18,16 +18,16 @@ import com.mindorks.bootcamp.instagram.utils.rx.SchedulerProvider
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
-class PostItemViewModel @Inject constructor(
+class MyPostItemViewModel @Inject constructor(
     schedulerProvider: SchedulerProvider,
     compositeDisposable: CompositeDisposable,
     networkHelper: NetworkHelper,
     userRepository: UserRepository,
     private val postRepository: PostRepository
-): BaseItemViewModel<Post>(schedulerProvider, compositeDisposable, networkHelper) {
+): BaseItemViewModel<MyPost>(schedulerProvider, compositeDisposable, networkHelper) {
 
     companion object {
-        const val TAG = "PostItemViewModel"
+        const val TAG = "MyPostItemViewModel"
     }
 
     private val user = userRepository.getCurrentUser()!!
@@ -39,16 +39,12 @@ class PostItemViewModel @Inject constructor(
         Pair(Networking.HEADER_ACCESS_TOKEN, user.accessToken)
     )
 
-    val name: LiveData<String> = Transformations.map(data) { it.creator.name }
+    val name = user.name
     val postTime: LiveData<String> = Transformations.map(data) { TimeUtils.getTimeAgo(it.createdAt) }
-    val likesCount: LiveData<Int> = Transformations.map(data) { it.likedBy?.size ?: 0 }
-    val isLiked: LiveData<Boolean> = Transformations.map(data) {
-        it.likedBy?.find { postUser -> postUser.id == user.id } !== null
-    }
-
-    val profileImage: LiveData<Image> = Transformations.map(data) {
-        it.creator.profilePicUrl?.run { Image(this, headers) }
-    }
+//    val profileImage: LiveData<Image> = Transformations.map(data) {
+//        Logger.d("PostItemVM", "${it.creator.profilePicUrl}")
+//        it.creator.profilePicUrl?.run { Image(this, headers) }
+//    }
 
     val imageDetail: LiveData<Image> = Transformations.map(data) {
         Image(
@@ -64,24 +60,19 @@ class PostItemViewModel @Inject constructor(
         Logger.d(TAG, "onCreate called")
     }
 
-    private fun calculateScaleFactor(post: Post) =
+    private fun calculateScaleFactor(post: MyPost) =
         post.imageWidth?.let { return@let screenWidth.toFloat() / it } ?: 1f
 
-    fun onLikeClick() = data.value?.let {
+    fun onDeleteClick() = data.value?.let {
         if (networkHelper.isNetworkConnected()) {
-            val api =
-                if (isLiked.value == true)
-                    postRepository.makeUnlikePost(it, user)
-                else
-                    postRepository.makeLikePost(it, user)
-
-            compositeDisposable.add(api
-                .subscribeOn(schedulerProvider.io())
-                .subscribe(
-                    { responsePost -> if (responsePost.id == it.id) updateData(responsePost) },
-                    { error -> handleNetworkError(error) }
-                )
-            )
+            messageString.postValue(Resource.success("Delete clicked"))
+//            compositeDisposable.add(api
+//                .subscribeOn(schedulerProvider.io())
+//                .subscribe(
+//                    { responsePost -> if (responsePost.id == it.id) updateData(responsePost) },
+//                    { error -> handleNetworkError(error) }
+//                )
+//            )
         } else {
             messageStringId.postValue(Resource.error(R.string.network_connection_error))
         }

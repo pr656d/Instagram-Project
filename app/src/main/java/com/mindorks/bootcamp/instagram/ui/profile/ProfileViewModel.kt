@@ -4,14 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.mindorks.bootcamp.instagram.data.model.Image
+import com.mindorks.bootcamp.instagram.data.model.MyPost
 import com.mindorks.bootcamp.instagram.data.model.User
 import com.mindorks.bootcamp.instagram.data.remote.Networking
+import com.mindorks.bootcamp.instagram.data.repository.PostRepository
 import com.mindorks.bootcamp.instagram.data.repository.ProfileRepository
 import com.mindorks.bootcamp.instagram.data.repository.UserRepository
 import com.mindorks.bootcamp.instagram.ui.base.BaseViewModel
 import com.mindorks.bootcamp.instagram.utils.common.Event
 import com.mindorks.bootcamp.instagram.utils.common.Resource
-import com.mindorks.bootcamp.instagram.utils.log.Logger
 import com.mindorks.bootcamp.instagram.utils.network.NetworkHelper
 import com.mindorks.bootcamp.instagram.utils.rx.SchedulerProvider
 import io.reactivex.disposables.CompositeDisposable
@@ -21,10 +22,11 @@ class ProfileViewModel(
     compositeDisposable: CompositeDisposable,
     networkHelper: NetworkHelper,
     private val userRepository: UserRepository,
-    private val profileRepository: ProfileRepository
+    private val profileRepository: ProfileRepository,
+    private val postRepository: PostRepository
 ) : BaseViewModel(schedulerProvider, compositeDisposable, networkHelper) {
 
-    val user = userRepository.getCurrentUser()!!
+    val user = userRepository.getCurrentUser()!! // should not be used without logged in
 
     private val headers = mapOf(
         Pair(Networking.HEADER_API_KEY, Networking.API_KEY),
@@ -35,19 +37,18 @@ class ProfileViewModel(
     val launchLogout: MutableLiveData<Event<Map<String, String>>> = MutableLiveData()
     val launchEditProfile: MutableLiveData<Event<User>> = MutableLiveData()
 
-    val loggingIn: MutableLiveData<Boolean> = MutableLiveData()
+    val loading: MutableLiveData<Boolean> = MutableLiveData()
     val loggingOut: MutableLiveData<Resource<Boolean>> = MutableLiveData()
     val name: MutableLiveData<String> = MutableLiveData()
     val bio: MutableLiveData<String> = MutableLiveData()
     val profilePicUrl: MutableLiveData<String> = MutableLiveData()
+    val posts: MutableLiveData<Resource<List<MyPost>>> = MutableLiveData()
 
     val profileImage: LiveData<Image> = Transformations.map(profilePicUrl) {
         it?.run { Image(this, headers) }
     }
 
     override fun onCreate() {
-        loggingIn.postValue(true)
-
         fetchProfile()
     }
 
@@ -79,23 +80,34 @@ class ProfileViewModel(
         )
     }
 
-    private fun fetchProfile() =
-        compositeDisposable.add(
+    private fun fetchProfile() {
+        loading.postValue(true)
+
+        compositeDisposable.addAll(
             profileRepository.fetchProfile(user)
                 .subscribeOn(schedulerProvider.io())
                 .subscribe(
                     {
-                        Logger.d(ProfileFragment.TAG, "$it")
                         name.postValue(it.name)
                         bio.postValue(it.bio)
                         profilePicUrl.postValue(it.profilePicUrl)
-                        loggingIn.postValue(false)
                     },
                     {
                         handleNetworkError(it)
-                        loggingIn.postValue(false)
                     }
-                )
+                ),
+            postRepository.fetchMyPostList(user)
+                .subscribeOn(schedulerProvider.io())
+                .subscribe(
+                    {
+                        posts.postValue(Resource.success(it))
+                        loading.postValue(false)
+                    },
+                    {
+                        handleNetworkError(it)
+                        loading.postValue(false)
+                    })
         )
+    }
 }
 

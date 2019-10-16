@@ -84,33 +84,38 @@
         style="@style/AppTheme.Body2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:lines="5"
         android:layout_marginTop="8dp"
+        android:lines="2"
         app:layout_constraintEnd_toEndOf="@+id/tvLogout"
         app:layout_constraintStart_toStartOf="@+id/ivProfile"
         app:layout_constraintTop_toBottomOf="@+id/tvName"
         tools:text="I am a passionate Android developer." />
 
+    <View
+        android:id="@+id/viewShadow"
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:background="@drawable/shadow_reverse"
+        app:layout_constraintTop_toBottomOf="@id/tvBio" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvPosts"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewShadow"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:listitem="@layout/item_view_mypost" />
+
     <ProgressBar
-        android:id="@+id/pb_loading"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
         android:indeterminate="true"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="@+id/btnEditProfile"
-        app:layout_constraintStart_toStartOf="@+id/btnEditProfile"
-        app:layout_constraintTop_toBottomOf="@+id/btnEditProfile" />
-
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvPosts"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="16dp"
-            app:layout_constraintStart_toStartOf="@+id/tvBio"
-            app:layout_constraintEnd_toEndOf="@+id/tvBio"
-            app:layout_constraintTop_toBottomOf="@+id/tvBio"
-            tools:listitem="@layout/item_view_mypost"/>
+        android:id="@+id/progressBar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

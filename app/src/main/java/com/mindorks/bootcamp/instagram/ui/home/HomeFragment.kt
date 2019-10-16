@@ -38,9 +38,8 @@ class HomeFragment : BaseFragment<HomeViewModel>() {
 
     override fun provideLayoutId(): Int = R.layout.fragment_home
 
-    override fun injectDependencies(fragmentComponent: FragmentComponent) {
+    override fun injectDependencies(fragmentComponent: FragmentComponent) =
         fragmentComponent.inject(this)
-    }
 
     override fun setupObservers() {
         super.setupObservers()

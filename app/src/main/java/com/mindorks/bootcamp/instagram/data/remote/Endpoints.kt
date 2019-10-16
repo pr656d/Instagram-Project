@@ -13,6 +13,9 @@ object Endpoints {
     const val POST_LIKE = "instagram/post/like"
     const val POST_UNLIKE = "instagram/post/unlike"
 
+    // My Post
+    const val MY_POST = "instagram/post/my"
+
     // User
     const val PROFILE = "me"
 
