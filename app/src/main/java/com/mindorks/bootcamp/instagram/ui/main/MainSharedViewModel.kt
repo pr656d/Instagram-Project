@@ -18,13 +18,17 @@ class MainSharedViewModel(
 
     val homeRedirection = MutableLiveData<Event<Boolean>>()
 
-    val newPost: MutableLiveData<Event<Post>> = MutableLiveData()
+    val notifyHomeForNewPost: MutableLiveData<Event<Post>> = MutableLiveData()
+
+    val notifyProfileForNewPost: MutableLiveData<Event<Post>> = MutableLiveData()
+
+    val notifyHomeForDeletedPost: MutableLiveData<Event<String>> = MutableLiveData()
 
     val logout: MutableLiveData<Event<Boolean>> = MutableLiveData()
 
-    fun onHomeRedirect() {
-        homeRedirection.postValue(Event(true))
-    }
+    fun onPostDelete(postId: String) = notifyHomeForDeletedPost.postValue(Event(postId))
+
+    fun onHomeRedirect() = homeRedirection.postValue(Event(true))
 
     fun onLogout() {
         logout.postValue(Event(true))

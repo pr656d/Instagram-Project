@@ -14,8 +14,10 @@ import kotlinx.android.synthetic.main.item_view_mypost.view.*
 import kotlinx.android.synthetic.main.item_view_post.view.ivPost
 import kotlinx.android.synthetic.main.item_view_post.view.tvTime
 
-class MyPostItemViewHolder(parent: ViewGroup) :
-    BaseItemViewHolder<MyPost, MyPostItemViewModel>(R.layout.item_view_mypost, parent) {
+class MyPostItemViewHolder(
+    parent: ViewGroup,
+    private val adapter: MyPostsAdapter
+) : BaseItemViewHolder<MyPost, MyPostItemViewModel>(R.layout.item_view_mypost, parent) {
 
     override fun injectDependencies(viewHolderComponent: ViewHolderComponent) {
         viewHolderComponent.inject(this)
@@ -27,27 +29,6 @@ class MyPostItemViewHolder(parent: ViewGroup) :
         viewModel.postTime.observe(this, Observer {
             itemView.tvTime.text = it
         })
-
-//        viewModel.profileImage.observe(this, Observer {
-//            it?.run {
-//                val glideRequest = Glide
-//                    .with(itemView.ivProfile.context)
-//                    .load(GlideHelper.getProtectedUrl(url, headers))
-//                    .apply(RequestOptions.circleCropTransform())
-//                    .apply(RequestOptions.placeholderOf(R.drawable.ic_profile_selected))
-//
-//                if (placeholderWidth > 0 && placeholderHeight > 0) {
-//                    val params = itemView.ivProfile.layoutParams as ViewGroup.LayoutParams
-//                    params.width = placeholderWidth
-//                    params.height = placeholderHeight
-//                    itemView.ivProfile.layoutParams = params
-//                    glideRequest
-//                        .apply(RequestOptions.overrideOf(placeholderWidth, placeholderHeight))
-//                        .apply(RequestOptions.placeholderOf(R.drawable.ic_profile_unselected))
-//                }
-//                glideRequest.into(itemView.ivProfile)
-//            }
-//        })
 
         viewModel.imageDetail.observe(this, Observer {
             it?.run {
@@ -65,6 +46,12 @@ class MyPostItemViewHolder(parent: ViewGroup) :
                         .apply(RequestOptions.placeholderOf(R.drawable.ic_photo))
                 }
                 glideRequest.into(itemView.ivPost)
+            }
+        })
+
+        viewModel.postDeleted.observe(this, Observer {
+            it.getIfNotHandled()?.run {
+                adapter.itemRemoved(this, adapterPosition)
             }
         })
     }

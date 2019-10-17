@@ -10,6 +10,7 @@ import com.mindorks.bootcamp.instagram.di.component.FragmentComponent
 import com.mindorks.bootcamp.instagram.ui.base.BaseFragment
 import com.mindorks.bootcamp.instagram.ui.home.posts.PostsAdapter
 import com.mindorks.bootcamp.instagram.ui.main.MainSharedViewModel
+import com.mindorks.bootcamp.instagram.utils.log.Logger
 import kotlinx.android.synthetic.main.fragment_home.*
 import javax.inject.Inject
 
@@ -52,8 +53,14 @@ class HomeFragment : BaseFragment<HomeViewModel>() {
             it.data?.run { postsAdapter.appendData(this) }
         })
 
-        mainSharedViewModel.newPost.observe(this, Observer {
+        mainSharedViewModel.notifyHomeForNewPost.observe(this, Observer {
             it.getIfNotHandled()?.run { viewModel.onNewPost(this) }
+        })
+
+        mainSharedViewModel.notifyHomeForDeletedPost.observe(this, Observer {
+            it.getIfNotHandled()?.run {
+                viewModel.onPostDelete(this)
+            }
         })
 
         viewModel.refreshPosts.observe(this, Observer {

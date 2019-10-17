@@ -70,6 +70,11 @@ class HomeViewModel(
         loadMorePosts()
     }
 
+    fun onPostDelete(postId: String) {
+        allPostList.removeAll { it.id == postId }
+        refreshPosts.postValue(Resource.success(mutableListOf<Post>().apply { addAll(allPostList) }))
+    }
+
     private fun loadMorePosts() {
         if (checkInternetConnectionWithMessage()) paginator.onNext(Pair(firstId, lastId))
     }

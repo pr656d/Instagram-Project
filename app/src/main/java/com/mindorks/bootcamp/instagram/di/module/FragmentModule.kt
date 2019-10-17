@@ -15,6 +15,7 @@ import com.mindorks.bootcamp.instagram.ui.photo.PhotoViewModel
 import com.mindorks.bootcamp.instagram.ui.profile.ProfileViewModel
 import com.mindorks.bootcamp.instagram.ui.profile.posts.MyPostsAdapter
 import com.mindorks.bootcamp.instagram.utils.ViewModelProviderFactory
+import com.mindorks.bootcamp.instagram.utils.common.PostChangeListener
 import com.mindorks.bootcamp.instagram.utils.network.NetworkHelper
 import com.mindorks.bootcamp.instagram.utils.rx.SchedulerProvider
 import com.mindorks.paracamera.Camera
@@ -34,7 +35,8 @@ class FragmentModule(private val fragment: BaseFragment<*>) {
     fun providePostsAdapter() = PostsAdapter(fragment.lifecycle, ArrayList())
 
     @Provides
-    fun provideMyPostsAdapter() = MyPostsAdapter(fragment.lifecycle, ArrayList())
+    fun provideMyPostsAdapter() =
+        MyPostsAdapter(fragment.lifecycle, ArrayList(), fragment as PostChangeListener)
 
     @Provides
     fun provideHomeViewModel(
@@ -66,7 +68,7 @@ class FragmentModule(private val fragment: BaseFragment<*>) {
             ViewModelProviderFactory(ProfileViewModel::class) {
                 ProfileViewModel(
                     schedulerProvider, compositeDisposable, networkHelper,
-                    userRepository, profileRepository, postRepository
+                    userRepository, profileRepository, postRepository, ArrayList()
                 )
             }
         ).get(ProfileViewModel::class.java)

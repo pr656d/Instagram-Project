@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.mindorks.bootcamp.instagram.R
+import com.mindorks.bootcamp.instagram.data.model.MyPost
 import com.mindorks.bootcamp.instagram.di.component.FragmentComponent
 import com.mindorks.bootcamp.instagram.ui.base.BaseFragment
 import com.mindorks.bootcamp.instagram.ui.login.LoginActivity
@@ -18,11 +19,13 @@ import com.mindorks.bootcamp.instagram.ui.profile.edit.EditProfileActivity
 import com.mindorks.bootcamp.instagram.ui.profile.posts.MyPostsAdapter
 import com.mindorks.bootcamp.instagram.utils.common.Constants
 import com.mindorks.bootcamp.instagram.utils.common.GlideHelper
+import com.mindorks.bootcamp.instagram.utils.common.PostChangeListener
 import com.mindorks.bootcamp.instagram.utils.common.Status
+import com.mindorks.bootcamp.instagram.utils.log.Logger
 import kotlinx.android.synthetic.main.fragment_profile.*
 import javax.inject.Inject
 
-class ProfileFragment : BaseFragment<ProfileViewModel>() {
+class ProfileFragment : BaseFragment<ProfileViewModel>(), PostChangeListener {
 
     companion object {
 
@@ -141,11 +144,24 @@ class ProfileFragment : BaseFragment<ProfileViewModel>() {
         })
 
         viewModel.posts.observe(this, Observer {
-            it.data?.run { postsAdapter.appendData(this) }
+            it.data?.run { postsAdapter.updateList(this) }
         })
 
         viewModel.postCount.observe(this, Observer {
+            Logger.d(TAG, "post count: $it")
             tvPostCount.text = it.toString()
+        })
+
+        mainSharedViewModel.notifyProfileForNewPost.observe(this, Observer {
+            it.getIfNotHandled()?.run {
+                viewModel.updateList(MyPost(this.id, this.imageUrl, this.imageWidth, this.imageHeight, this.createdAt))
+            }
+        })
+
+        viewModel.notifyHomeForDeletedPost.observe(this, Observer {
+            it.getIfNotHandled()?.run {
+                mainSharedViewModel.onPostDelete(this)
+            }
         })
 
         viewModel.loading.observe(this, Observer {
@@ -162,6 +178,10 @@ class ProfileFragment : BaseFragment<ProfileViewModel>() {
             layoutManager = linearLayoutManager
             adapter = postsAdapter
         }
+    }
+
+    override fun onDeletePost(postId: String) {
+        viewModel.onPostDelete(postId)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

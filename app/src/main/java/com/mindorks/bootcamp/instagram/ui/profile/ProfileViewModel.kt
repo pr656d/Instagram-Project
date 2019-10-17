@@ -23,7 +23,8 @@ class ProfileViewModel(
     networkHelper: NetworkHelper,
     private val userRepository: UserRepository,
     private val profileRepository: ProfileRepository,
-    private val postRepository: PostRepository
+    private val postRepository: PostRepository,
+    private val myPostsList: ArrayList<MyPost>
 ) : BaseViewModel(schedulerProvider, compositeDisposable, networkHelper) {
 
     val user = userRepository.getCurrentUser()!! // should not be used without logged in
@@ -47,6 +48,7 @@ class ProfileViewModel(
     }
     val posts: MutableLiveData<Resource<List<MyPost>>> = MutableLiveData()
     val postCount: LiveData<Int> = Transformations.map(posts) { it.data?.count() }
+    val notifyHomeForDeletedPost: MutableLiveData<Event<String>> = MutableLiveData()
 
     override fun onCreate() {
         fetchProfile()
@@ -54,7 +56,16 @@ class ProfileViewModel(
 
     fun onEditProfileClicked() = launchEditProfile.postValue(Event(user))
 
+    fun onPostDelete(postId: String) {
+        notifyHomeForDeletedPost.postValue(Event(postId))
+    }
+
     fun refreshProfileData() = fetchProfile()
+
+    fun updateList(post: MyPost) {
+        myPostsList.add(0, post)
+        posts.postValue(Resource.success(mutableListOf<MyPost>().apply { addAll(myPostsList) }))
+    }
 
     fun onLogoutClicked() {
         loggingOut.postValue(Resource.loading(true))
@@ -100,13 +111,15 @@ class ProfileViewModel(
                 .subscribeOn(schedulerProvider.io())
                 .subscribe(
                     {
+                        myPostsList.addAll(it)
                         posts.postValue(Resource.success(it))
                         loading.postValue(false)
                     },
                     {
                         handleNetworkError(it)
                         loading.postValue(false)
-                    })
+                    }
+                )
         )
     }
 }

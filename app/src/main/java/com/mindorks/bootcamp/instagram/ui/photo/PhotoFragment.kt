@@ -52,7 +52,8 @@ class PhotoFragment : BaseFragment<PhotoViewModel>() {
 
         viewModel.post.observe(this, Observer {
             it.getIfNotHandled()?.run {
-                mainSharedViewModel.newPost.postValue(Event(this))
+                mainSharedViewModel.notifyHomeForNewPost.postValue(Event(this))
+                mainSharedViewModel.notifyProfileForNewPost.postValue(Event(this))
                 mainSharedViewModel.onHomeRedirect()
             }
         })
