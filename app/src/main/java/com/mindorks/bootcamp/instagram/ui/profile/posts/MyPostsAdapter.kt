@@ -15,9 +15,6 @@ class MyPostsAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyPostItemViewHolder =
         MyPostItemViewHolder(parent, this)
 
-    fun itemRemoved(postId: String, position: Int) {
-        posts.removeAt(position)
-        notifyItemRemoved(position)
-        callBack.onDeletePost(postId)
-    }
+    fun itemRemoved(postId: String, position: Int) = callBack.onDeletePost(postId)
+
 }

@@ -57,6 +57,8 @@ class ProfileViewModel(
     fun onEditProfileClicked() = launchEditProfile.postValue(Event(user))
 
     fun onPostDelete(postId: String) {
+        myPostsList.removeAll{ it.id == postId }
+        posts.postValue(Resource.success(myPostsList))
         notifyHomeForDeletedPost.postValue(Event(postId))
     }
 
