@@ -28,7 +28,7 @@
 
     <!--  Logout  -->
     <string name="logout_error">Can\'t logout. Try again</string>
-    <string name="logging_out_text">Logging Out…</string>
+    <string name="logging_out_text">Logging Out&#8230;</string>
 
     <!-- menu -->
     <string name="menu_home">Home</string>
@@ -42,6 +42,7 @@
     <string name="logout_profile_text">Logout</string>
     <string name="edit_profile_text">Edit Profile</string>
     <string name="posts_label">Posts</string>
+    <string name="no_posts_yet">No posts yet</string>
 
     <!--  edit profile  -->
     <string name="change_photo">Change Photo</string>

@@ -21,7 +21,6 @@ import com.mindorks.bootcamp.instagram.utils.common.Constants
 import com.mindorks.bootcamp.instagram.utils.common.GlideHelper
 import com.mindorks.bootcamp.instagram.utils.common.PostChangeListener
 import com.mindorks.bootcamp.instagram.utils.common.Status
-import com.mindorks.bootcamp.instagram.utils.log.Logger
 import kotlinx.android.synthetic.main.fragment_profile.*
 import javax.inject.Inject
 
@@ -148,8 +147,17 @@ class ProfileFragment : BaseFragment<ProfileViewModel>(), PostChangeListener {
         })
 
         viewModel.postCount.observe(this, Observer {
-            Logger.d(TAG, "post count: $it")
             tvPostCount.text = it.toString()
+            when (it) {
+                0 -> {
+                    rvPosts.visibility = View.GONE
+                    tvNoPosts.visibility = View.VISIBLE
+                }
+                else -> {
+                    tvNoPosts.visibility = View.GONE
+                    rvPosts.visibility = View.VISIBLE
+                }
+            }
         })
 
         mainSharedViewModel.notifyProfileForNewPost.observe(this, Observer {
