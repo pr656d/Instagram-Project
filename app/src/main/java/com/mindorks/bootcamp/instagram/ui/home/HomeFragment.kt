@@ -10,11 +10,11 @@ import com.mindorks.bootcamp.instagram.di.component.FragmentComponent
 import com.mindorks.bootcamp.instagram.ui.base.BaseFragment
 import com.mindorks.bootcamp.instagram.ui.home.posts.PostsAdapter
 import com.mindorks.bootcamp.instagram.ui.main.MainSharedViewModel
-import com.mindorks.bootcamp.instagram.utils.log.Logger
+import com.mindorks.bootcamp.instagram.utils.common.PostChangeListener
 import kotlinx.android.synthetic.main.fragment_home.*
 import javax.inject.Inject
 
-class HomeFragment : BaseFragment<HomeViewModel>() {
+class HomeFragment : BaseFragment<HomeViewModel>(), PostChangeListener {
 
     companion object {
 
@@ -89,4 +89,7 @@ class HomeFragment : BaseFragment<HomeViewModel>() {
         }
     }
 
+    override fun onDeletePost(postId: String) {
+        viewModel.onPostDelete(postId)
+    }
 }

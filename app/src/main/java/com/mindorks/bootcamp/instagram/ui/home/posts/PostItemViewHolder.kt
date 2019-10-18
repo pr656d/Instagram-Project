@@ -12,8 +12,10 @@ import com.mindorks.bootcamp.instagram.ui.base.BaseItemViewHolder
 import com.mindorks.bootcamp.instagram.utils.common.GlideHelper
 import kotlinx.android.synthetic.main.item_view_post.view.*
 
-class PostItemViewHolder(parent: ViewGroup) :
-    BaseItemViewHolder<Post, PostItemViewModel>(R.layout.item_view_post, parent) {
+class PostItemViewHolder(
+    parent: ViewGroup,
+    private val adapter: PostsAdapter
+) : BaseItemViewHolder<Post, PostItemViewModel>(R.layout.item_view_post, parent) {
 
     override fun injectDependencies(viewHolderComponent: ViewHolderComponent) {
         viewHolderComponent.inject(this)
@@ -37,6 +39,12 @@ class PostItemViewHolder(parent: ViewGroup) :
         viewModel.isLiked.observe(this, Observer {
             if (it) itemView.ivLike.setImageResource(R.drawable.ic_heart_selected)
             else itemView.ivLike.setImageResource(R.drawable.ic_heart_unselected)
+        })
+
+        viewModel.postDeleted.observe(this, Observer {
+            it.getIfNotHandled()?.run {
+                adapter.itemRemoved(this, adapterPosition)
+            }
         })
 
         viewModel.profileImage.observe(this, Observer {

@@ -1,6 +1,7 @@
 package com.mindorks.bootcamp.instagram.ui.home.posts
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.mindorks.bootcamp.instagram.R
 import com.mindorks.bootcamp.instagram.data.model.Image
@@ -9,10 +10,10 @@ import com.mindorks.bootcamp.instagram.data.remote.Networking
 import com.mindorks.bootcamp.instagram.data.repository.PostRepository
 import com.mindorks.bootcamp.instagram.data.repository.UserRepository
 import com.mindorks.bootcamp.instagram.ui.base.BaseItemViewModel
+import com.mindorks.bootcamp.instagram.utils.common.Event
 import com.mindorks.bootcamp.instagram.utils.common.Resource
 import com.mindorks.bootcamp.instagram.utils.common.TimeUtils
 import com.mindorks.bootcamp.instagram.utils.display.ScreenUtils
-import com.mindorks.bootcamp.instagram.utils.log.Logger
 import com.mindorks.bootcamp.instagram.utils.network.NetworkHelper
 import com.mindorks.bootcamp.instagram.utils.rx.SchedulerProvider
 import io.reactivex.disposables.CompositeDisposable
@@ -39,6 +40,7 @@ class PostItemViewModel @Inject constructor(
         Pair(Networking.HEADER_ACCESS_TOKEN, user.accessToken)
     )
 
+    val postDeleted: MutableLiveData<Event<String>> = MutableLiveData()
     val name: LiveData<String> = Transformations.map(data) { it.creator.name }
     val postTime: LiveData<String> = Transformations.map(data) { TimeUtils.getTimeAgo(it.createdAt) }
     val likesCount: LiveData<Int> = Transformations.map(data) { it.likedBy?.size ?: 0 }
@@ -60,12 +62,27 @@ class PostItemViewModel @Inject constructor(
             } ?: screenHeight / 3)
     }
 
-    override fun onCreate() {
-        Logger.d(TAG, "onCreate called")
-    }
+    override fun onCreate() {}
 
     private fun calculateScaleFactor(post: Post) =
         post.imageWidth?.let { return@let screenWidth.toFloat() / it } ?: 1f
+
+    fun onDeleteClick() = data.value?.let {
+        if (networkHelper.isNetworkConnected()) {
+            compositeDisposable.add(
+                postRepository.makeDeletePost(it, user)
+                    .subscribeOn(schedulerProvider.io())
+                    .subscribe(
+                        { response ->
+                            if (response) postDeleted.postValue(Event(it.id))
+                        },
+                        { error -> handleNetworkError(error) }
+                    )
+            )
+        } else {
+            messageStringId.postValue(Resource.error(R.string.network_connection_error))
+        }
+    }
 
     fun onLikeClick() = data.value?.let {
         if (networkHelper.isNetworkConnected()) {

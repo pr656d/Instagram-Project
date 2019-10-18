@@ -12,10 +12,10 @@ import com.bumptech.glide.request.RequestOptions
 import com.mindorks.bootcamp.instagram.R
 import com.mindorks.bootcamp.instagram.di.component.FragmentComponent
 import com.mindorks.bootcamp.instagram.ui.base.BaseFragment
+import com.mindorks.bootcamp.instagram.ui.home.posts.PostsAdapter
 import com.mindorks.bootcamp.instagram.ui.login.LoginActivity
 import com.mindorks.bootcamp.instagram.ui.main.MainSharedViewModel
 import com.mindorks.bootcamp.instagram.ui.profile.edit.EditProfileActivity
-import com.mindorks.bootcamp.instagram.ui.profile.posts.MyPostsAdapter
 import com.mindorks.bootcamp.instagram.utils.common.Constants
 import com.mindorks.bootcamp.instagram.utils.common.GlideHelper
 import com.mindorks.bootcamp.instagram.utils.common.PostChangeListener
@@ -44,7 +44,7 @@ class ProfileFragment : BaseFragment<ProfileViewModel>(), PostChangeListener {
     lateinit var linearLayoutManager: LinearLayoutManager
 
     @Inject
-    lateinit var postsAdapter: MyPostsAdapter
+    lateinit var postsAdapter: PostsAdapter
 
     override fun provideLayoutId(): Int = R.layout.fragment_profile
 

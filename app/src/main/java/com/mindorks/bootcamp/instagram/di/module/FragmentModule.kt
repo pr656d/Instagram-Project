@@ -13,7 +13,6 @@ import com.mindorks.bootcamp.instagram.ui.home.posts.PostsAdapter
 import com.mindorks.bootcamp.instagram.ui.main.MainSharedViewModel
 import com.mindorks.bootcamp.instagram.ui.photo.PhotoViewModel
 import com.mindorks.bootcamp.instagram.ui.profile.ProfileViewModel
-import com.mindorks.bootcamp.instagram.ui.profile.posts.MyPostsAdapter
 import com.mindorks.bootcamp.instagram.utils.ViewModelProviderFactory
 import com.mindorks.bootcamp.instagram.utils.common.PostChangeListener
 import com.mindorks.bootcamp.instagram.utils.network.NetworkHelper
@@ -32,11 +31,7 @@ class FragmentModule(private val fragment: BaseFragment<*>) {
     fun provideLinearLayoutManager(): LinearLayoutManager = LinearLayoutManager(fragment.context)
 
     @Provides
-    fun providePostsAdapter() = PostsAdapter(fragment.lifecycle, ArrayList())
-
-    @Provides
-    fun provideMyPostsAdapter() =
-        MyPostsAdapter(fragment.lifecycle, ArrayList(), fragment as PostChangeListener)
+    fun providePostsAdapter() = PostsAdapter(fragment.lifecycle, ArrayList(), fragment as PostChangeListener)
 
     @Provides
     fun provideHomeViewModel(
