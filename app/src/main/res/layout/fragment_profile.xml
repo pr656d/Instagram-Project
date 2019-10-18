@@ -47,9 +47,9 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
         android:textStyle="bold"
+        android:text="@string/zero_text"
         app:layout_constraintStart_toEndOf="@+id/ivProfile"
-        app:layout_constraintTop_toTopOf="@+id/ivProfile"
-        tools:text="10" />
+        app:layout_constraintTop_toTopOf="@+id/ivProfile" />
 
     <Button
         android:id="@+id/btnEditProfile"

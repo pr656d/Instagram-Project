@@ -130,6 +130,7 @@ class ProfileViewModel(
                     }
                 ),
             postRepository.fetchMyPostList(user)
+                .doAfterSuccess { if (it.count() == 0) loading.postValue(false) }
                 .subscribeOn(schedulerProvider.io())
                 .subscribe(
                     { myPosts ->
@@ -143,9 +144,7 @@ class ProfileViewModel(
                                 }
                                 .subscribeOn(schedulerProvider.io())
                                 .subscribe(
-                                    { post ->
-                                        myPostsList.add(post)
-                                    },
+                                    { post -> myPostsList.add(post) },
                                     {
                                         handleNetworkError(it)
                                         loading.postValue(false)

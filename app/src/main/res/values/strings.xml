@@ -52,6 +52,7 @@
     <string name="email_hint">Email Address</string>
     <string name="uploading_image_text">Uploading Image Please Wait&#8230;</string>
     <string name="saving_profile_text">Saving Profile Please Wait&#8230;</string>
+    <string name="zero_text">0</string>
 
     <!--  photo  -->
     <string name="camera">Camera</string>
