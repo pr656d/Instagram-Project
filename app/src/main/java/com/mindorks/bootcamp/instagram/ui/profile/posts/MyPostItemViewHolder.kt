@@ -6,18 +6,16 @@ import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.mindorks.bootcamp.instagram.R
-import com.mindorks.bootcamp.instagram.data.model.MyPost
+import com.mindorks.bootcamp.instagram.data.model.Post
 import com.mindorks.bootcamp.instagram.di.component.ViewHolderComponent
 import com.mindorks.bootcamp.instagram.ui.base.BaseItemViewHolder
 import com.mindorks.bootcamp.instagram.utils.common.GlideHelper
-import kotlinx.android.synthetic.main.item_view_mypost.view.*
-import kotlinx.android.synthetic.main.item_view_post.view.ivPost
-import kotlinx.android.synthetic.main.item_view_post.view.tvTime
+import kotlinx.android.synthetic.main.item_view_post.view.*
 
 class MyPostItemViewHolder(
     parent: ViewGroup,
     private val adapter: MyPostsAdapter
-) : BaseItemViewHolder<MyPost, MyPostItemViewModel>(R.layout.item_view_mypost, parent) {
+) : BaseItemViewHolder<Post, MyPostItemViewModel>(R.layout.item_view_post, parent) {
 
     override fun injectDependencies(viewHolderComponent: ViewHolderComponent) {
         viewHolderComponent.inject(this)

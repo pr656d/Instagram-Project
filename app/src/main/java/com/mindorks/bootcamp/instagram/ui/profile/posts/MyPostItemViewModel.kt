@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.mindorks.bootcamp.instagram.R
 import com.mindorks.bootcamp.instagram.data.model.Image
-import com.mindorks.bootcamp.instagram.data.model.MyPost
+import com.mindorks.bootcamp.instagram.data.model.Post
 import com.mindorks.bootcamp.instagram.data.remote.Networking
 import com.mindorks.bootcamp.instagram.data.repository.PostRepository
 import com.mindorks.bootcamp.instagram.data.repository.UserRepository
@@ -25,7 +25,7 @@ class MyPostItemViewModel @Inject constructor(
     networkHelper: NetworkHelper,
     userRepository: UserRepository,
     private val postRepository: PostRepository
-) : BaseItemViewModel<MyPost>(schedulerProvider, compositeDisposable, networkHelper) {
+) : BaseItemViewModel<Post>(schedulerProvider, compositeDisposable, networkHelper) {
 
     companion object {
         const val TAG = "MyPostItemViewModel"
@@ -58,7 +58,7 @@ class MyPostItemViewModel @Inject constructor(
 
     override fun onCreate() {}
 
-    private fun calculateScaleFactor(post: MyPost) =
+    private fun calculateScaleFactor(post: Post) =
         post.imageWidth?.let { return@let screenWidth.toFloat() / it } ?: 1f
 
     fun onDeleteClick() = data.value?.let {

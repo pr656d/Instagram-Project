@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.mindorks.bootcamp.instagram.R
-import com.mindorks.bootcamp.instagram.data.model.MyPost
 import com.mindorks.bootcamp.instagram.di.component.FragmentComponent
 import com.mindorks.bootcamp.instagram.ui.base.BaseFragment
 import com.mindorks.bootcamp.instagram.ui.login.LoginActivity
@@ -146,7 +145,7 @@ class ProfileFragment : BaseFragment<ProfileViewModel>(), PostChangeListener {
             it.data?.run { postsAdapter.updateList(this) }
         })
 
-        viewModel.postCount.observe(this, Observer {
+        viewModel.postsCount.observe(this, Observer {
             tvPostCount.text = it.toString()
             when (it) {
                 0 -> {
@@ -162,7 +161,7 @@ class ProfileFragment : BaseFragment<ProfileViewModel>(), PostChangeListener {
 
         mainSharedViewModel.notifyProfileForNewPost.observe(this, Observer {
             it.getIfNotHandled()?.run {
-                viewModel.updateList(MyPost(this.id, this.imageUrl, this.imageWidth, this.imageHeight, this.createdAt))
+                viewModel.updateList(this)
             }
         })
 

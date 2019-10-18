@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.mindorks.bootcamp.instagram.data.model.Image
-import com.mindorks.bootcamp.instagram.data.model.MyPost
+import com.mindorks.bootcamp.instagram.data.model.Post
 import com.mindorks.bootcamp.instagram.data.model.User
 import com.mindorks.bootcamp.instagram.data.remote.Networking
 import com.mindorks.bootcamp.instagram.data.repository.PostRepository
@@ -13,6 +13,7 @@ import com.mindorks.bootcamp.instagram.data.repository.UserRepository
 import com.mindorks.bootcamp.instagram.ui.base.BaseViewModel
 import com.mindorks.bootcamp.instagram.utils.common.Event
 import com.mindorks.bootcamp.instagram.utils.common.Resource
+import com.mindorks.bootcamp.instagram.utils.log.Logger
 import com.mindorks.bootcamp.instagram.utils.network.NetworkHelper
 import com.mindorks.bootcamp.instagram.utils.rx.SchedulerProvider
 import io.reactivex.disposables.CompositeDisposable
@@ -24,7 +25,7 @@ class ProfileViewModel(
     private val userRepository: UserRepository,
     private val profileRepository: ProfileRepository,
     private val postRepository: PostRepository,
-    private val myPostsList: ArrayList<MyPost>
+    private val myPostsList: ArrayList<Post>
 ) : BaseViewModel(schedulerProvider, compositeDisposable, networkHelper) {
 
     val user = userRepository.getCurrentUser()!! // should not be used without logged in
@@ -46,8 +47,8 @@ class ProfileViewModel(
     val profileImage: LiveData<Image> = Transformations.map(profilePicUrl) {
         it?.run { Image(this, headers) }
     }
-    val posts: MutableLiveData<Resource<List<MyPost>>> = MutableLiveData()
-    val postCount: LiveData<Int> = Transformations.map(posts) { it.data?.count() }
+    val posts: MutableLiveData<Resource<List<Post>>> = MutableLiveData()
+    val postsCount: LiveData<Int> = Transformations.map(posts) { it.data?.count() }
     val notifyHomeForDeletedPost: MutableLiveData<Event<String>> = MutableLiveData()
 
     override fun onCreate() {
@@ -57,16 +58,16 @@ class ProfileViewModel(
     fun onEditProfileClicked() = launchEditProfile.postValue(Event(user))
 
     fun onPostDelete(postId: String) {
-        myPostsList.removeAll{ it.id == postId }
+        myPostsList.removeAll { it.id == postId }
         posts.postValue(Resource.success(myPostsList))
         notifyHomeForDeletedPost.postValue(Event(postId))
     }
 
     fun refreshProfileData() = fetchProfile()
 
-    fun updateList(post: MyPost) {
+    fun updateList(post: Post) {
         myPostsList.add(0, post)
-        posts.postValue(Resource.success(mutableListOf<MyPost>().apply { addAll(myPostsList) }))
+        posts.postValue(Resource.success(mutableListOf<Post>().apply { addAll(myPostsList) }))
     }
 
     fun onLogoutClicked() {
@@ -112,10 +113,31 @@ class ProfileViewModel(
             postRepository.fetchMyPostList(user)
                 .subscribeOn(schedulerProvider.io())
                 .subscribe(
-                    {
-                        myPostsList.addAll(it)
-                        posts.postValue(Resource.success(it))
-                        loading.postValue(false)
+                    { myPosts ->
+                        Logger.d(ProfileFragment.TAG, "subscribe success")
+                        Logger.d(ProfileFragment.TAG, "myPosts size: ${myPosts.size}")
+                        myPosts.forEach { myPost ->
+                            Logger.d(ProfileFragment.TAG, "INSIDE FOR EACH ${myPost.id}")
+                            postRepository.fetchPostDetail(myPost, user)
+                                .subscribeOn(schedulerProvider.io())
+                                .subscribe(
+                                    { post ->
+                                        Logger.d(ProfileFragment.TAG, "GOT POST")
+                                        myPostsList.add(post)
+                                        Logger.d(ProfileFragment.TAG, "myPostsList size: ${myPostsList.size}")
+                                        posts.postValue(Resource.success(myPostsList))
+                                    },
+                                    {
+                                        handleNetworkError(it)
+                                        loading.postValue(false)
+                                    }
+                                )
+                        }.also {
+                            Logger.d(ProfileFragment.TAG, "INSIDE ALSO")
+                            Logger.d(ProfileFragment.TAG, "myPostsList size: ${myPostsList.size}")
+                            loading.postValue(false)
+                            Logger.d(ProfileFragment.TAG, "OUTSIDE ALSO")
+                        }
                     },
                     {
                         handleNetworkError(it)

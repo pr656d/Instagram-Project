@@ -35,6 +35,14 @@ class PostRepository @Inject constructor(
         ).map { it.data }
     }
 
+    fun fetchPostDetail(post: MyPost, user: User): Single<Post> {
+        return networkService.doFetchPostDetail(
+            post.id,
+            user.id,
+            user.accessToken
+        ).map { it.data }
+    }
+
     fun makeLikePost(post: Post, user: User): Single<Post> {
         return networkService.doPostLikeCall(
             PostLikeModifyRequest(post.id),
@@ -67,7 +75,7 @@ class PostRepository @Inject constructor(
         }
     }
 
-    fun makeDeletePost(post: MyPost, user: User): Single<Boolean> {
+    fun makeDeletePost(post: Post, user: User): Single<Boolean> {
         return networkService.doDeletePostCall(
             post.id,
             user.id,

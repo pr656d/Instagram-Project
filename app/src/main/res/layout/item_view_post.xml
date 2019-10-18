@@ -54,9 +54,10 @@
             android:id="@+id/ivLike"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
             android:padding="6dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ivPost"
             tools:ignore="ContentDescription"
@@ -69,6 +70,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
             android:layout_marginTop="10dp"
+            app:layout_constraintBottom_toBottomOf="@+id/ivLike"
             app:layout_constraintStart_toEndOf="@+id/ivLike"
             app:layout_constraintTop_toBottomOf="@+id/ivPost"
             tools:text="@string/post_like_label" />
@@ -78,12 +80,23 @@
             style="@style/AppTheme.Body2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="16dp"
             android:textColor="@color/grey"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ivPost"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvLikesCount"
+            app:layout_constraintEnd_toStartOf="@+id/ivDelete"
+            app:layout_constraintTop_toTopOf="@+id/tvLikesCount"
             tools:text="4 Hrs ago" />
+        
+        <ImageView
+            android:id="@+id/ivDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/ic_delete"
+            app:layout_constraintBottom_toBottomOf="@+id/tvTime"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tvTime"
+            tools:ignore="ContentDescription" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>
