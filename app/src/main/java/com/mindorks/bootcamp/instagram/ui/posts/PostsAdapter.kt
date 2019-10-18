@@ -1,4 +1,4 @@
-package com.mindorks.bootcamp.instagram.ui.home.posts
+package com.mindorks.bootcamp.instagram.ui.posts
 
 import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
@@ -15,5 +15,7 @@ class PostsAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostItemViewHolder =
         PostItemViewHolder(parent, this)
 
-    fun itemRemoved(postId: String, position: Int) = callBack.onDeletePost(postId)
+    fun itemDeleteClick(post: Post) = callBack.onDelete(post)
+
+    fun itemLikeClick(post: Post) = callBack.onLike(post)
 }

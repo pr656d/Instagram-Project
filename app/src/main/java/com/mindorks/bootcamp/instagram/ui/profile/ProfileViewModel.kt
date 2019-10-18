@@ -11,7 +11,9 @@ import com.mindorks.bootcamp.instagram.data.repository.PostRepository
 import com.mindorks.bootcamp.instagram.data.repository.ProfileRepository
 import com.mindorks.bootcamp.instagram.data.repository.UserRepository
 import com.mindorks.bootcamp.instagram.ui.base.BaseViewModel
+import com.mindorks.bootcamp.instagram.utils.common.ChangeState
 import com.mindorks.bootcamp.instagram.utils.common.Event
+import com.mindorks.bootcamp.instagram.utils.common.NotifyPostChange
 import com.mindorks.bootcamp.instagram.utils.common.Resource
 import com.mindorks.bootcamp.instagram.utils.network.NetworkHelper
 import com.mindorks.bootcamp.instagram.utils.rx.SchedulerProvider
@@ -49,6 +51,7 @@ class ProfileViewModel(
     val posts: MutableLiveData<Resource<List<Post>>> = MutableLiveData()
     val postsCount: LiveData<Int> = Transformations.map(posts) { it.data?.count() }
     val notifyHomeForDeletedPost: MutableLiveData<Event<String>> = MutableLiveData()
+    val notifyHome: MutableLiveData<Event<NotifyPostChange<Post>>> = MutableLiveData()
 
     override fun onCreate() {
         fetchProfile()
@@ -56,17 +59,33 @@ class ProfileViewModel(
 
     fun onEditProfileClicked() = launchEditProfile.postValue(Event(user))
 
-    fun onPostDelete(postId: String) {
-        myPostsList.removeAll { it.id == postId }
-        posts.postValue(Resource.success(myPostsList))
-        notifyHomeForDeletedPost.postValue(Event(postId))
-    }
-
     fun refreshProfileData() = fetchProfile()
 
-    fun updateList(post: Post) {
+    fun onNewPost(post: Post) {
         myPostsList.add(0, post)
         posts.postValue(Resource.success(mutableListOf<Post>().apply { addAll(myPostsList) }))
+    }
+
+    fun onLike(post: Post, doNotifyHome: Boolean) {
+        if (doNotifyHome)
+            notifyHome.postValue(Event(NotifyPostChange.like(post)))
+    }
+
+    fun onDelete(post: Post, doNotifyHome: Boolean) {
+        myPostsList.removeAll { it.id == post.id }
+        posts.postValue(Resource.success(myPostsList))
+        if (doNotifyHome)
+            notifyHome.postValue(Event(NotifyPostChange.delete(post)))
+    }
+
+    fun onPostChange(change: NotifyPostChange<Post>) {
+        when (change.state) {
+            ChangeState.NEW_POST -> onNewPost(change.data)
+
+            ChangeState.LIKE -> onLike(change.data, false)
+
+            ChangeState.DELETE -> onDelete(change.data, false)
+        }
     }
 
     fun onLogoutClicked() {

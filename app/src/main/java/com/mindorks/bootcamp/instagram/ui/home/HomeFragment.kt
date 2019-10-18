@@ -6,11 +6,13 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mindorks.bootcamp.instagram.R
+import com.mindorks.bootcamp.instagram.data.model.Post
 import com.mindorks.bootcamp.instagram.di.component.FragmentComponent
 import com.mindorks.bootcamp.instagram.ui.base.BaseFragment
-import com.mindorks.bootcamp.instagram.ui.home.posts.PostsAdapter
 import com.mindorks.bootcamp.instagram.ui.main.MainSharedViewModel
+import com.mindorks.bootcamp.instagram.ui.posts.PostsAdapter
 import com.mindorks.bootcamp.instagram.utils.common.PostChangeListener
+import com.mindorks.bootcamp.instagram.utils.common.Receiver
 import kotlinx.android.synthetic.main.fragment_home.*
 import javax.inject.Inject
 
@@ -57,9 +59,15 @@ class HomeFragment : BaseFragment<HomeViewModel>(), PostChangeListener {
             it.getIfNotHandled()?.run { viewModel.onNewPost(this) }
         })
 
-        mainSharedViewModel.notifyHomeForDeletedPost.observe(this, Observer {
+        mainSharedViewModel.notifyHome.observe(this, Observer {
             it.getIfNotHandled()?.run {
-                viewModel.onPostDelete(this)
+                viewModel.onPostChange(this)
+            }
+        })
+
+        viewModel.notifyProfile.observe(this, Observer {
+            it.getIfNotHandled()?.run {
+                mainSharedViewModel.onPostChange(this, Receiver.PROFILE)
             }
         })
 
@@ -89,7 +97,11 @@ class HomeFragment : BaseFragment<HomeViewModel>(), PostChangeListener {
         }
     }
 
-    override fun onDeletePost(postId: String) {
-        viewModel.onPostDelete(postId)
+    override fun onDelete(post: Post) {
+        viewModel.onDelete(post, true)
+    }
+
+    override fun onLike(post: Post) {
+        viewModel.onLike(post, true)
     }
 }

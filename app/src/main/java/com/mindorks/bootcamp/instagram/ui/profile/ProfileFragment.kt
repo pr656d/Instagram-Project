@@ -10,16 +10,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.mindorks.bootcamp.instagram.R
+import com.mindorks.bootcamp.instagram.data.model.Post
 import com.mindorks.bootcamp.instagram.di.component.FragmentComponent
 import com.mindorks.bootcamp.instagram.ui.base.BaseFragment
-import com.mindorks.bootcamp.instagram.ui.home.posts.PostsAdapter
 import com.mindorks.bootcamp.instagram.ui.login.LoginActivity
 import com.mindorks.bootcamp.instagram.ui.main.MainSharedViewModel
+import com.mindorks.bootcamp.instagram.ui.posts.PostsAdapter
 import com.mindorks.bootcamp.instagram.ui.profile.edit.EditProfileActivity
-import com.mindorks.bootcamp.instagram.utils.common.Constants
-import com.mindorks.bootcamp.instagram.utils.common.GlideHelper
-import com.mindorks.bootcamp.instagram.utils.common.PostChangeListener
-import com.mindorks.bootcamp.instagram.utils.common.Status
+import com.mindorks.bootcamp.instagram.utils.common.*
 import kotlinx.android.synthetic.main.fragment_profile.*
 import javax.inject.Inject
 
@@ -161,13 +159,19 @@ class ProfileFragment : BaseFragment<ProfileViewModel>(), PostChangeListener {
 
         mainSharedViewModel.notifyProfileForNewPost.observe(this, Observer {
             it.getIfNotHandled()?.run {
-                viewModel.updateList(this)
+                viewModel.onNewPost(this)
             }
         })
 
-        viewModel.notifyHomeForDeletedPost.observe(this, Observer {
+        mainSharedViewModel.notifyProfile.observe(this, Observer {
             it.getIfNotHandled()?.run {
-                mainSharedViewModel.onPostDelete(this)
+                viewModel.onPostChange(this)
+            }
+        })
+
+        viewModel.notifyHome.observe(this, Observer {
+            it.getIfNotHandled()?.run {
+                mainSharedViewModel.onPostChange(this, Receiver.HOME)
             }
         })
 
@@ -187,8 +191,12 @@ class ProfileFragment : BaseFragment<ProfileViewModel>(), PostChangeListener {
         }
     }
 
-    override fun onDeletePost(postId: String) {
-        viewModel.onPostDelete(postId)
+    override fun onDelete(post: Post) {
+        viewModel.onDelete(post, true)
+    }
+
+    override fun onLike(post: Post) {
+        viewModel.onLike(post, true)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -6,6 +6,9 @@ import com.mindorks.bootcamp.instagram.data.model.User
 import com.mindorks.bootcamp.instagram.data.repository.PostRepository
 import com.mindorks.bootcamp.instagram.data.repository.UserRepository
 import com.mindorks.bootcamp.instagram.ui.base.BaseViewModel
+import com.mindorks.bootcamp.instagram.utils.common.ChangeState
+import com.mindorks.bootcamp.instagram.utils.common.Event
+import com.mindorks.bootcamp.instagram.utils.common.NotifyPostChange
 import com.mindorks.bootcamp.instagram.utils.common.Resource
 import com.mindorks.bootcamp.instagram.utils.network.NetworkHelper
 import com.mindorks.bootcamp.instagram.utils.rx.SchedulerProvider
@@ -26,6 +29,7 @@ class HomeViewModel(
     val loading: MutableLiveData<Boolean> = MutableLiveData()
     val posts: MutableLiveData<Resource<List<Post>>> = MutableLiveData()
     val refreshPosts: MutableLiveData<Resource<List<Post>>> = MutableLiveData()
+    val notifyProfile: MutableLiveData<Event<NotifyPostChange<Post>>> = MutableLiveData()
 
     private var firstId: String? = null
     private var lastId: String? = null
@@ -70,9 +74,31 @@ class HomeViewModel(
         loadMorePosts()
     }
 
-    fun onPostDelete(postId: String) {
-        allPostList.removeAll { it.id == postId }
+    fun onDelete(post: Post, doNotifyProfile: Boolean) {
+        allPostList.removeAll { it.id == post.id }
         refreshPosts.postValue(Resource.success(mutableListOf<Post>().apply { addAll(allPostList) }))
+        if (doNotifyProfile)
+            notifyProfile.postValue(Event(NotifyPostChange.delete(post)))
+    }
+
+    fun onNewPost(post: Post) {
+        allPostList.add(0, post)
+        refreshPosts.postValue(Resource.success(mutableListOf<Post>().apply { addAll(allPostList) }))
+    }
+
+    fun onLike(post: Post, doNotifyProfile: Boolean) {
+        if (doNotifyProfile)
+            notifyProfile.postValue(Event(NotifyPostChange.like(post)))
+    }
+
+    fun onPostChange(change: NotifyPostChange<Post>) {
+        when (change.state) {
+            ChangeState.NEW_POST -> onNewPost(change.data)
+
+            ChangeState.LIKE -> onLike(change.data, false)
+
+            ChangeState.DELETE -> onDelete(change.data, false)
+        }
     }
 
     private fun loadMorePosts() {
@@ -81,10 +107,5 @@ class HomeViewModel(
 
     fun onLoadMore() {
         if (loading.value !== null && loading.value == false) loadMorePosts()
-    }
-
-    fun onNewPost(post: Post) {
-        allPostList.add(0, post)
-        refreshPosts.postValue(Resource.success(mutableListOf<Post>().apply { addAll(allPostList) }))
     }
 }

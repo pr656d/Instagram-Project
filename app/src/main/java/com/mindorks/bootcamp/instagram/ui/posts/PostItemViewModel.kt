@@ -1,4 +1,4 @@
-package com.mindorks.bootcamp.instagram.ui.home.posts
+package com.mindorks.bootcamp.instagram.ui.posts
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -40,7 +40,8 @@ class PostItemViewModel @Inject constructor(
         Pair(Networking.HEADER_ACCESS_TOKEN, user.accessToken)
     )
 
-    val postDeleted: MutableLiveData<Event<String>> = MutableLiveData()
+    val postDeleted: MutableLiveData<Event<Unit>> = MutableLiveData()
+    val isOwner: LiveData<Boolean> = Transformations.map(data) { it.creator.id == user.id}
     val name: LiveData<String> = Transformations.map(data) { it.creator.name }
     val postTime: LiveData<String> = Transformations.map(data) { TimeUtils.getTimeAgo(it.createdAt) }
     val likesCount: LiveData<Int> = Transformations.map(data) { it.likedBy?.size ?: 0 }
@@ -74,7 +75,7 @@ class PostItemViewModel @Inject constructor(
                     .subscribeOn(schedulerProvider.io())
                     .subscribe(
                         { response ->
-                            if (response) postDeleted.postValue(Event(it.id))
+                            if (response) postDeleted.postValue(Event(Unit))
                         },
                         { error -> handleNetworkError(error) }
                     )

@@ -1,4 +1,4 @@
-package com.mindorks.bootcamp.instagram.ui.home.posts
+package com.mindorks.bootcamp.instagram.ui.posts
 
 import android.view.View
 import android.view.ViewGroup
@@ -39,12 +39,17 @@ class PostItemViewHolder(
         viewModel.isLiked.observe(this, Observer {
             if (it) itemView.ivLike.setImageResource(R.drawable.ic_heart_selected)
             else itemView.ivLike.setImageResource(R.drawable.ic_heart_unselected)
+            adapter.itemLikeClick(viewModel.data.value!!)
         })
 
         viewModel.postDeleted.observe(this, Observer {
             it.getIfNotHandled()?.run {
-                adapter.itemRemoved(this, adapterPosition)
+                adapter.itemDeleteClick(viewModel.data.value!!)
             }
+        })
+
+        viewModel.isOwner.observe(this, Observer {
+            itemView.ivDelete.visibility = if (it) View.VISIBLE else View.GONE
         })
 
         viewModel.profileImage.observe(this, Observer {
@@ -90,5 +95,6 @@ class PostItemViewHolder(
 
     override fun setupView(view: View) {
         itemView.ivLike.setOnClickListener { viewModel.onLikeClick() }
+        itemView.ivDelete.setOnClickListener { viewModel.onDeleteClick() }
     }
 }

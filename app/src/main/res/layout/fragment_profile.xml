@@ -90,22 +90,15 @@
         app:layout_constraintTop_toBottomOf="@+id/tvName"
         tools:text="I am a passionate Android developer." />
 
-    <View
-        android:id="@+id/viewShadow"
-        android:layout_width="match_parent"
-        android:layout_height="8dp"
-        android:background="@drawable/shadow_reverse"
-        app:layout_constraintTop_toBottomOf="@id/tvBio" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvPosts"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewShadow"
+        app:layout_constraintTop_toBottomOf="@+id/tvBio"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:listitem="@layout/item_view_mypost" />
+        tools:listitem="@layout/item_view_post" />
 
     <TextView
         style="@style/AppTheme.Headline6"
