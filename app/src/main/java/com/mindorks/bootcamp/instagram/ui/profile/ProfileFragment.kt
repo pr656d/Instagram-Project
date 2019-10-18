@@ -139,7 +139,7 @@ class ProfileFragment : BaseFragment<ProfileViewModel>(), PostChangeListener {
             tvBio.text = it
         })
 
-        viewModel.posts.observe(this, Observer {
+        viewModel.refreshPosts.observe(this, Observer {
             it.data?.run { postsAdapter.updateList(this) }
         })
 

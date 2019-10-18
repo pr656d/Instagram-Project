@@ -48,9 +48,8 @@ class ProfileViewModel(
     val profileImage: LiveData<Image> = Transformations.map(profilePicUrl) {
         it?.run { Image(this, headers) }
     }
-    val posts: MutableLiveData<Resource<List<Post>>> = MutableLiveData()
-    val postsCount: LiveData<Int> = Transformations.map(posts) { it.data?.count() }
-    val notifyHomeForDeletedPost: MutableLiveData<Event<String>> = MutableLiveData()
+    val refreshPosts: MutableLiveData<Resource<List<Post>>> = MutableLiveData()
+    val postsCount: LiveData<Int> = Transformations.map(refreshPosts) { it.data?.count() }
     val notifyHome: MutableLiveData<Event<NotifyPostChange<Post>>> = MutableLiveData()
 
     override fun onCreate() {
@@ -63,19 +62,21 @@ class ProfileViewModel(
 
     fun onNewPost(post: Post) {
         myPostsList.add(0, post)
-        posts.postValue(Resource.success(mutableListOf<Post>().apply { addAll(myPostsList) }))
+        refreshPosts.postValue(Resource.success(mutableListOf<Post>().apply { addAll(myPostsList) }))
     }
 
     fun onLike(post: Post, doNotifyHome: Boolean) {
-        if (doNotifyHome)
-            notifyHome.postValue(Event(NotifyPostChange.like(post)))
+        if (doNotifyHome) notifyHome.postValue(Event(NotifyPostChange.like(post)))
+        else {
+            myPostsList.run { forEachIndexed { i, p -> if (p.id == post.id) this[i] = post } }
+            refreshPosts.postValue(Resource.success(mutableListOf<Post>().apply { myPostsList }))
+        }
     }
 
     fun onDelete(post: Post, doNotifyHome: Boolean) {
         myPostsList.removeAll { it.id == post.id }
-        posts.postValue(Resource.success(myPostsList))
-        if (doNotifyHome)
-            notifyHome.postValue(Event(NotifyPostChange.delete(post)))
+        refreshPosts.postValue(Resource.success(myPostsList))
+        if (doNotifyHome) notifyHome.postValue(Event(NotifyPostChange.delete(post)))
     }
 
     fun onPostChange(change: NotifyPostChange<Post>) {
@@ -136,7 +137,7 @@ class ProfileViewModel(
                             postRepository.fetchPostDetail(myPost, user)
                                 .doAfterSuccess {
                                     if (myPosts.count() == myPostsList.count()) {
-                                        posts.postValue(Resource.success(myPostsList))
+                                        refreshPosts.postValue(Resource.success(myPostsList))
                                         loading.postValue(false)
                                     }
                                 }

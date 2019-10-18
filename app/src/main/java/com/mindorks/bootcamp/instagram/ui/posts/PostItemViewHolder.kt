@@ -39,12 +39,17 @@ class PostItemViewHolder(
         viewModel.isLiked.observe(this, Observer {
             if (it) itemView.ivLike.setImageResource(R.drawable.ic_heart_selected)
             else itemView.ivLike.setImageResource(R.drawable.ic_heart_unselected)
-            adapter.itemLikeClick(viewModel.data.value!!)
         })
 
         viewModel.postDeleted.observe(this, Observer {
             it.getIfNotHandled()?.run {
                 adapter.itemDeleteClick(viewModel.data.value!!)
+            }
+        })
+
+        viewModel.likeClicked.observe(this, Observer {
+            it.getIfNotHandled()?.run {
+                adapter.itemLikeClick(viewModel.data.value!!)
             }
         })
 

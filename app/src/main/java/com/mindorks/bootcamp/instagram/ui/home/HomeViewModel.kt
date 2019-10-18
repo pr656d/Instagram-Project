@@ -77,8 +77,7 @@ class HomeViewModel(
     fun onDelete(post: Post, doNotifyProfile: Boolean) {
         allPostList.removeAll { it.id == post.id }
         refreshPosts.postValue(Resource.success(mutableListOf<Post>().apply { addAll(allPostList) }))
-        if (doNotifyProfile)
-            notifyProfile.postValue(Event(NotifyPostChange.delete(post)))
+        if (doNotifyProfile) notifyProfile.postValue(Event(NotifyPostChange.delete(post)))
     }
 
     fun onNewPost(post: Post) {
@@ -87,8 +86,11 @@ class HomeViewModel(
     }
 
     fun onLike(post: Post, doNotifyProfile: Boolean) {
-        if (doNotifyProfile)
-            notifyProfile.postValue(Event(NotifyPostChange.like(post)))
+        if (doNotifyProfile) notifyProfile.postValue(Event(NotifyPostChange.like(post)))
+        else {
+            allPostList.run { forEachIndexed { i, p -> if (p.id == post.id) this[i] = post } }
+            refreshPosts.postValue(Resource.success(mutableListOf<Post>().apply { addAll(allPostList) }))
+        }
     }
 
     fun onPostChange(change: NotifyPostChange<Post>) {

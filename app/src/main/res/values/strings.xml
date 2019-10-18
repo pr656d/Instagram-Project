@@ -35,7 +35,7 @@
     <string name="menu_add_photos">Add Photos</string>
     <string name="menu_profile">Profile</string>
 
-    <!-- posts -->
+    <!-- refreshPosts -->
     <string name="post_like_label">%1d Likes</string>
 
     <!--  profile  -->

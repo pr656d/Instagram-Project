@@ -41,6 +41,7 @@ class PostItemViewModel @Inject constructor(
     )
 
     val postDeleted: MutableLiveData<Event<Unit>> = MutableLiveData()
+    val likeClicked: MutableLiveData<Event<Unit>> = MutableLiveData()
     val isOwner: LiveData<Boolean> = Transformations.map(data) { it.creator.id == user.id}
     val name: LiveData<String> = Transformations.map(data) { it.creator.name }
     val postTime: LiveData<String> = Transformations.map(data) { TimeUtils.getTimeAgo(it.createdAt) }
@@ -96,7 +97,12 @@ class PostItemViewModel @Inject constructor(
             compositeDisposable.add(api
                 .subscribeOn(schedulerProvider.io())
                 .subscribe(
-                    { responsePost -> if (responsePost.id == it.id) updateData(responsePost) },
+                    { responsePost ->
+                        if (responsePost.id == it.id) {
+                            likeClicked.postValue(Event(Unit))
+                            updateData(responsePost)
+                        }
+                    },
                     { error -> handleNetworkError(error) }
                 )
             )
