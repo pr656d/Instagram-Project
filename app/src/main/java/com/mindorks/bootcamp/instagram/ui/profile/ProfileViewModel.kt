@@ -13,7 +13,6 @@ import com.mindorks.bootcamp.instagram.data.repository.UserRepository
 import com.mindorks.bootcamp.instagram.ui.base.BaseViewModel
 import com.mindorks.bootcamp.instagram.utils.common.Event
 import com.mindorks.bootcamp.instagram.utils.common.Resource
-import com.mindorks.bootcamp.instagram.utils.log.Logger
 import com.mindorks.bootcamp.instagram.utils.network.NetworkHelper
 import com.mindorks.bootcamp.instagram.utils.rx.SchedulerProvider
 import io.reactivex.disposables.CompositeDisposable
@@ -114,29 +113,24 @@ class ProfileViewModel(
                 .subscribeOn(schedulerProvider.io())
                 .subscribe(
                     { myPosts ->
-                        Logger.d(ProfileFragment.TAG, "subscribe success")
-                        Logger.d(ProfileFragment.TAG, "myPosts size: ${myPosts.size}")
                         myPosts.forEach { myPost ->
-                            Logger.d(ProfileFragment.TAG, "INSIDE FOR EACH ${myPost.id}")
                             postRepository.fetchPostDetail(myPost, user)
+                                .doAfterSuccess {
+                                    if (myPosts.count() == myPostsList.count()) {
+                                        posts.postValue(Resource.success(myPostsList))
+                                        loading.postValue(false)
+                                    }
+                                }
                                 .subscribeOn(schedulerProvider.io())
                                 .subscribe(
                                     { post ->
-                                        Logger.d(ProfileFragment.TAG, "GOT POST")
                                         myPostsList.add(post)
-                                        Logger.d(ProfileFragment.TAG, "myPostsList size: ${myPostsList.size}")
-                                        posts.postValue(Resource.success(myPostsList))
                                     },
                                     {
                                         handleNetworkError(it)
                                         loading.postValue(false)
                                     }
                                 )
-                        }.also {
-                            Logger.d(ProfileFragment.TAG, "INSIDE ALSO")
-                            Logger.d(ProfileFragment.TAG, "myPostsList size: ${myPostsList.size}")
-                            loading.postValue(false)
-                            Logger.d(ProfileFragment.TAG, "OUTSIDE ALSO")
                         }
                     },
                     {
