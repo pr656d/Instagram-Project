@@ -55,10 +55,6 @@ class HomeFragment : BaseFragment<HomeViewModel>(), PostChangeListener {
             it.data?.run { postsAdapter.appendData(this) }
         })
 
-        mainSharedViewModel.notifyHomeForNewPost.observe(this, Observer {
-            it.getIfNotHandled()?.run { viewModel.onNewPost(this) }
-        })
-
         mainSharedViewModel.notifyHome.observe(this, Observer {
             it.getIfNotHandled()?.run {
                 viewModel.onPostChange(this)

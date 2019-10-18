@@ -157,12 +157,6 @@ class ProfileFragment : BaseFragment<ProfileViewModel>(), PostChangeListener {
             }
         })
 
-        mainSharedViewModel.notifyProfileForNewPost.observe(this, Observer {
-            it.getIfNotHandled()?.run {
-                viewModel.onNewPost(this)
-            }
-        })
-
         mainSharedViewModel.notifyProfile.observe(this, Observer {
             it.getIfNotHandled()?.run {
                 viewModel.onPostChange(this)

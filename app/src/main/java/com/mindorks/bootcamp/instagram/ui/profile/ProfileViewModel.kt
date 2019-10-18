@@ -60,7 +60,7 @@ class ProfileViewModel(
 
     fun refreshProfileData() = fetchProfile()
 
-    fun onNewPost(post: Post) {
+    private fun onNewPost(post: Post) {
         myPostsList.add(0, post)
         refreshPosts.postValue(Resource.success(mutableListOf<Post>().apply { addAll(myPostsList) }))
     }

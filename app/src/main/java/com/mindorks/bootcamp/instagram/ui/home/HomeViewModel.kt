@@ -20,7 +20,7 @@ class HomeViewModel(
     schedulerProvider: SchedulerProvider,
     compositeDisposable: CompositeDisposable,
     networkHelper: NetworkHelper,
-    private val userRepository: UserRepository,
+    userRepository: UserRepository,
     private val postRepository: PostRepository,
     private val allPostList: ArrayList<Post>,
     private val paginator: PublishProcessor<Pair<String?, String?>>
@@ -80,7 +80,7 @@ class HomeViewModel(
         if (doNotifyProfile) notifyProfile.postValue(Event(NotifyPostChange.delete(post)))
     }
 
-    fun onNewPost(post: Post) {
+    private fun onNewPost(post: Post) {
         allPostList.add(0, post)
         refreshPosts.postValue(Resource.success(mutableListOf<Post>().apply { addAll(allPostList) }))
     }
