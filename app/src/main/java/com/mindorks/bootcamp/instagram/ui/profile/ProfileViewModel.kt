@@ -69,7 +69,7 @@ class ProfileViewModel(
         if (doNotifyHome) notifyHome.postValue(Event(NotifyPostChange.like(post)))
         else {
             myPostsList.run { forEachIndexed { i, p -> if (p.id == post.id) this[i] = post } }
-            refreshPosts.postValue(Resource.success(mutableListOf<Post>().apply { myPostsList }))
+            refreshPosts.postValue(Resource.success(mutableListOf<Post>().apply { addAll(myPostsList) }))
         }
     }
 

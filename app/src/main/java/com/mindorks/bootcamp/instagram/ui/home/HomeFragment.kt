@@ -70,7 +70,6 @@ class HomeFragment : BaseFragment<HomeViewModel>(), PostChangeListener {
         viewModel.refreshPosts.observe(this, Observer {
             it.data?.run {
                 postsAdapter.updateList(this)
-                rvPosts.scrollToPosition(0)
             }
         })
     }
