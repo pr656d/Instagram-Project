@@ -140,9 +140,7 @@ class ProfileFragment : BaseFragment<ProfileViewModel>(), PostChangeListener {
         })
 
         viewModel.refreshPosts.observe(this, Observer {
-            it.data?.run {
-                postsAdapter.updateList(this)
-            }
+            it.data?.run { postsAdapter.updateList(this) }
         })
 
         viewModel.postsCount.observe(this, Observer {

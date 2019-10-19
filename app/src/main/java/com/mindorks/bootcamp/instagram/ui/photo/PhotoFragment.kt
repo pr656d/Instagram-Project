@@ -11,7 +11,6 @@ import com.mindorks.bootcamp.instagram.ui.base.BaseFragment
 import com.mindorks.bootcamp.instagram.ui.main.MainSharedViewModel
 import com.mindorks.bootcamp.instagram.utils.common.NotifyPostChange
 import com.mindorks.bootcamp.instagram.utils.common.Receiver
-import com.mindorks.bootcamp.instagram.utils.log.Logger
 import com.mindorks.paracamera.Camera
 import kotlinx.android.synthetic.main.fragment_photo.*
 import java.io.FileNotFoundException
@@ -72,7 +71,6 @@ class PhotoFragment : BaseFragment<PhotoViewModel>() {
         view_camera.setOnClickListener {
             try {
                 camera.takePicture()
-                Logger.d(TAG, "taking Picture()")
             } catch (e: Exception) {
                 e.printStackTrace()
             }

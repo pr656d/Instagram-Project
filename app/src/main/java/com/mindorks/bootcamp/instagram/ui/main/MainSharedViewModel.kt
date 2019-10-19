@@ -14,15 +14,11 @@ class MainSharedViewModel(
     schedulerProvider: SchedulerProvider,
     compositeDisposable: CompositeDisposable,
     networkHelper: NetworkHelper
-): BaseViewModel(schedulerProvider, compositeDisposable, networkHelper) {
+) : BaseViewModel(schedulerProvider, compositeDisposable, networkHelper) {
 
     override fun onCreate() {}
 
     val homeRedirection = MutableLiveData<Event<Boolean>>()
-
-    val notifyHomeForNewPost: MutableLiveData<Event<Post>> = MutableLiveData()
-
-    val notifyProfileForNewPost: MutableLiveData<Event<Post>> = MutableLiveData()
 
     val notifyHome: MutableLiveData<Event<NotifyPostChange<Post>>> = MutableLiveData()
 
@@ -31,7 +27,7 @@ class MainSharedViewModel(
     val logout: MutableLiveData<Event<Boolean>> = MutableLiveData()
 
     fun onPostChange(change: NotifyPostChange<Post>, receiver: Receiver) {
-        when(receiver) {
+        when (receiver) {
             Receiver.HOME -> {
                 notifyHome.postValue(Event(change))
             }

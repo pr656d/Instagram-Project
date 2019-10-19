@@ -115,6 +115,7 @@ class ProfileViewModel(
 
     private fun fetchProfile() {
         loading.postValue(true)
+        myPostsList.clear() // Just to be sure we have empty list before fetching
 
         compositeDisposable.addAll(
             profileRepository.fetchProfile(user)
@@ -136,8 +137,10 @@ class ProfileViewModel(
                     { myPosts ->
                         myPosts.forEach { myPost ->
                             postRepository.fetchPostDetail(myPost, user)
-                                .doAfterSuccess {
+                                .doFinally {
+                                    // Checks for all requests are completed
                                     if (myPosts.count() == myPostsList.count()) {
+                                        myPostsList.sortBy { it.createdAt }
                                         refreshPosts.postValue(Resource.success(myPostsList))
                                         loading.postValue(false)
                                     }
