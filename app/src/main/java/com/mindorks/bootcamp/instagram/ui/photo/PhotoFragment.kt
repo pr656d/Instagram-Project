@@ -89,13 +89,6 @@ class PhotoFragment : BaseFragment<PhotoViewModel>() {
                 e.printStackTrace()
             }
         }
-        loadingDialog.apply {
-            isCancelable = false
-            arguments = Bundle().apply {
-                putInt(LoadingDialog.MESSAGE_KEY, R.string.uploading_image_text)
-            }
-        }
-        loadingDialog.show(fragmentManager, LoadingDialog.TAG)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
