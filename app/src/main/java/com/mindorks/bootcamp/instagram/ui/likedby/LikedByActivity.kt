@@ -1,9 +1,11 @@
 package com.mindorks.bootcamp.instagram.ui.likedby
 
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mindorks.bootcamp.instagram.R
+import com.mindorks.bootcamp.instagram.data.model.Post
 import com.mindorks.bootcamp.instagram.di.component.ActivityComponent
 import com.mindorks.bootcamp.instagram.ui.base.BaseActivity
 import com.mindorks.bootcamp.instagram.ui.likedby.list.LikedByAdapter
@@ -35,6 +37,21 @@ class LikedByActivity : BaseActivity<LikedByViewModel>(), LikedByListListener {
         viewModel.userList.observe(this, Observer {
             it.getIfNotHandled()?.run {
                 likedByAdapter.updateList(this)
+                if (this.isEmpty()) {
+                    rvLikedBy.visibility = View.GONE
+                    tvNoLikes.visibility = View.VISIBLE
+                } else {
+                    tvNoLikes.visibility = View.GONE
+                    rvLikedBy.visibility = View.VISIBLE
+                }
+            }
+        })
+
+        viewModel.openUser.observe(this, Observer {
+            it.getIfNotHandled()?.run {
+                // Pass user id to new profile activity to show selected user's detail
+                // Unfortunately we can't do that because API is not available
+                showMessage(this.name)
             }
         })
     }
@@ -50,9 +67,11 @@ class LikedByActivity : BaseActivity<LikedByViewModel>(), LikedByListListener {
             layoutManager = linearLayoutManager
             adapter = likedByAdapter
         }
+
+        btnBack.setOnClickListener { finish() }
     }
 
-    override fun onLikesClick(userId: String) {
-        showMessage(userId)
+    override fun onSelect(user: Post.User) {
+        viewModel.onSelectUser(user)
     }
 }

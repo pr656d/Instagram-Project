@@ -17,5 +17,5 @@ interface SelectPhotoDialogListener {
 }
 
 interface LikedByListListener {
-    fun onLikesClick(userId: String)
+    fun onSelect(user: Post.User)
 }

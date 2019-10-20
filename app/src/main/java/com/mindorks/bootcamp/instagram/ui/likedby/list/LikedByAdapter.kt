@@ -14,4 +14,6 @@ class LikedByAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LikedByItemViewHolder =
         LikedByItemViewHolder(parent, this)
+
+    fun onClick(user: Post.User) = callBack.onSelect(user)
 }

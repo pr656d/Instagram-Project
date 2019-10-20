@@ -25,8 +25,7 @@ class LikedByItemViewHolder(
 
         viewModel.userSelected.observe(this, Observer {
             it.getIfNotHandled()?.run {
-                showMessage(name)
-                // Call adapter method here
+                adapter.onClick(this)
             }
         })
 

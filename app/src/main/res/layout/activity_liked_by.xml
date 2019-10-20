@@ -22,7 +22,7 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:id="@+id/btnClose"
+                android:id="@+id/btnBack"
                 android:layout_width="38dp"
                 android:layout_height="38dp"
                 android:layout_marginStart="8dp"
@@ -39,9 +39,9 @@
                 android:layout_marginStart="20dp"
                 android:text="@string/liked_by"
                 android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="@+id/btnClose"
-                app:layout_constraintStart_toEndOf="@+id/btnClose"
-                app:layout_constraintTop_toTopOf="@+id/btnClose" />
+                app:layout_constraintBottom_toBottomOf="@+id/btnBack"
+                app:layout_constraintStart_toEndOf="@+id/btnBack"
+                app:layout_constraintTop_toTopOf="@+id/btnBack" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -65,4 +65,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/viewShadow"
         tools:listitem="@layout/item_view_liked_by"/>
+
+    <TextView
+        style="@style/AppTheme.Headline6"
+        android:id="@+id/tvNoLikes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_likes_message"
+        android:textSize="18sp"
+        android:textColor="@color/grey_light"
+        app:layout_constraintTop_toBottomOf="@+id/viewShadow"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:visibility="gone"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

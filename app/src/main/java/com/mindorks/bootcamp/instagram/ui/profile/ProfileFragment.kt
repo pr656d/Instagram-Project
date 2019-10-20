@@ -157,10 +157,11 @@ class ProfileFragment : BaseFragment<ProfileViewModel>(), PostClickListener {
             when (it) {
                 0 -> {
                     rvPosts.visibility = View.GONE
-                    tvNoPosts.visibility = View.VISIBLE
+                    tvStatus.visibility = View.VISIBLE
+                    tvStatus.setText(R.string.no_posts_yet)
                 }
                 else -> {
-                    tvNoPosts.visibility = View.GONE
+                    tvStatus.visibility = View.GONE
                     rvPosts.visibility = View.VISIBLE
                 }
             }
@@ -179,7 +180,13 @@ class ProfileFragment : BaseFragment<ProfileViewModel>(), PostClickListener {
         })
 
         viewModel.loading.observe(this, Observer {
-            progressBar.visibility = if (it) View.VISIBLE else View.GONE
+            if (it) {
+                progressBar.visibility = View.VISIBLE
+                tvStatus.setText(R.string.loading)
+            } else {
+                progressBar.visibility = View.GONE
+                tvStatus.setText(R.string.no_posts_yet)
+            }
         })
     }
 

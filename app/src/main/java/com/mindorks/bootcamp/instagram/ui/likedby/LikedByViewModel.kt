@@ -14,6 +14,7 @@ class LikedByViewModel(
 ): BaseViewModel(schedulerProvider, compositeDisposable, networkHelper) {
 
     val userList: MutableLiveData<Event<List<Post.User>>> = MutableLiveData()
+    val openUser: MutableLiveData<Event<Post.User>> = MutableLiveData()
 
     override fun onCreate() {}
 
@@ -27,5 +28,7 @@ class LikedByViewModel(
             userList.postValue(Event(this))
         }
     }
+
+    fun onSelectUser(user: Post.User) = openUser.postValue(Event(user))
 }
 
