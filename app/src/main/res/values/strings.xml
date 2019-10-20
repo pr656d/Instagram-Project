@@ -54,6 +54,9 @@
     <string name="email_hint">Email Address</string>
     <string name="zero_text">0</string>
 
+    <!--  Liked By  -->
+    <string name="liked_by">Liked By</string>
+
     <!--  photo  -->
     <string name="camera">Camera</string>
     <string name="gallery">Gallery</string>
