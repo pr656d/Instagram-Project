@@ -29,7 +29,7 @@ class LoginActivity : BaseActivity<LoginViewModel>() {
 
     override fun setupView(savedInstanceState: Bundle?) {
 
-        et_email.addTextChangedListener(object : TextWatcher {
+        etEmail.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 viewModel.onEmailChange(s.toString())
             }
@@ -74,7 +74,7 @@ class LoginActivity : BaseActivity<LoginViewModel>() {
         })
 
         viewModel.emailField.observe(this, Observer {
-            if (et_email.text.toString() != it) et_email.setText(it)
+            if (etEmail.text.toString() != it) etEmail.setText(it)
         })
 
         viewModel.emailValidation.observe(this, Observer {
@@ -85,7 +85,7 @@ class LoginActivity : BaseActivity<LoginViewModel>() {
         })
 
         viewModel.passwordField.observe(this, Observer {
-            if (et_password.text.toString() != it) et_email.setText(it)
+            if (et_password.text.toString() != it) etEmail.setText(it)
         })
 
         viewModel.passwordValidation.observe(this, Observer {

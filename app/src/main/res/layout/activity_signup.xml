@@ -20,7 +20,7 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_name"
+            android:id="@+id/etName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
@@ -44,7 +44,7 @@
         app:layout_constraintTop_toBottomOf="@id/layout_name">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_email"
+            android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
@@ -108,7 +108,8 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/layout_name"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/instagram_logo" />
+        app:srcCompat="@drawable/instagram_logo"
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/textView"

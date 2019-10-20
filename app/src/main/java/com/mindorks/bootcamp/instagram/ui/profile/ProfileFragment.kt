@@ -13,9 +13,9 @@ import com.mindorks.bootcamp.instagram.R
 import com.mindorks.bootcamp.instagram.data.model.Post
 import com.mindorks.bootcamp.instagram.di.component.FragmentComponent
 import com.mindorks.bootcamp.instagram.ui.base.BaseFragment
+import com.mindorks.bootcamp.instagram.ui.common.posts.PostsAdapter
 import com.mindorks.bootcamp.instagram.ui.login.LoginActivity
 import com.mindorks.bootcamp.instagram.ui.main.MainSharedViewModel
-import com.mindorks.bootcamp.instagram.ui.common.posts.PostsAdapter
 import com.mindorks.bootcamp.instagram.ui.profile.edit.EditProfileActivity
 import com.mindorks.bootcamp.instagram.utils.common.*
 import kotlinx.android.synthetic.main.fragment_profile.*

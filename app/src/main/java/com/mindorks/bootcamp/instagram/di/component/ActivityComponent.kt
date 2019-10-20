@@ -5,7 +5,6 @@ import com.mindorks.bootcamp.instagram.di.module.ActivityModule
 import com.mindorks.bootcamp.instagram.ui.login.LoginActivity
 import com.mindorks.bootcamp.instagram.ui.main.MainActivity
 import com.mindorks.bootcamp.instagram.ui.profile.edit.EditProfileActivity
-import com.mindorks.bootcamp.instagram.ui.profile.edit.ChangePhotoActivity
 import com.mindorks.bootcamp.instagram.ui.signup.SignupActivity
 import com.mindorks.bootcamp.instagram.ui.splash.SplashActivity
 import dagger.Component
@@ -26,6 +25,4 @@ interface ActivityComponent {
     fun inject(activity: MainActivity)
 
     fun inject(activity: EditProfileActivity)
-
-    fun inject(activity: ChangePhotoActivity)
 }

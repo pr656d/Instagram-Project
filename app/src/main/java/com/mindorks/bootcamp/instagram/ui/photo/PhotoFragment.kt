@@ -52,15 +52,9 @@ class PhotoFragment : BaseFragment<PhotoViewModel>() {
 
         viewModel.loading.observe(this, Observer {
             if (it) {
-                loadingDialog.apply {
-                    isCancelable = false
-                    arguments = Bundle().apply {
-                        putInt(LoadingDialog.MESSAGE_KEY, R.string.uploading_image_text)
-                    }
-                }
                 loadingDialog.show(fragmentManager, LoadingDialog.TAG)
             } else {
-                loadingDialog.dismiss()
+                try { loadingDialog.dismiss() } catch (e: NullPointerException) { }
             }
         })
 
@@ -87,6 +81,13 @@ class PhotoFragment : BaseFragment<PhotoViewModel>() {
                 camera.takePicture()
             } catch (e: Exception) {
                 e.printStackTrace()
+            }
+        }
+
+        loadingDialog.apply {
+            isCancelable = false
+            arguments = Bundle().apply {
+                putInt(LoadingDialog.MESSAGE_KEY, R.string.loading)
             }
         }
     }

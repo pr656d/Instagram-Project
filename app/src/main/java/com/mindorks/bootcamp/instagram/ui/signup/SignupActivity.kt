@@ -12,7 +12,7 @@ import com.mindorks.bootcamp.instagram.ui.base.BaseActivity
 import com.mindorks.bootcamp.instagram.ui.login.LoginActivity
 import com.mindorks.bootcamp.instagram.ui.main.MainActivity
 import com.mindorks.bootcamp.instagram.utils.common.Status
-import kotlinx.android.synthetic.main.activity_login.et_email
+import kotlinx.android.synthetic.main.activity_login.etEmail
 import kotlinx.android.synthetic.main.activity_login.et_password
 import kotlinx.android.synthetic.main.activity_signup.*
 
@@ -29,7 +29,7 @@ class SignupActivity : BaseActivity<SignupViewModel>() {
 
     override fun setupView(savedInstanceState: Bundle?) {
 
-        et_email.addTextChangedListener(object: TextWatcher {
+        etEmail.addTextChangedListener(object: TextWatcher {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 viewModel.onEmailChange(s.toString())
             }
@@ -49,7 +49,7 @@ class SignupActivity : BaseActivity<SignupViewModel>() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
         })
 
-        et_name.addTextChangedListener(object : TextWatcher {
+        etName.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 viewModel.onNameChange(s.toString())
             }
@@ -82,7 +82,7 @@ class SignupActivity : BaseActivity<SignupViewModel>() {
         })
 
         viewModel.emailField.observe(this, Observer {
-            if (et_email.text.toString() != it) et_email.setText(it)
+            if (etEmail.text.toString() != it) etEmail.setText(it)
         })
 
         viewModel.emailValidation.observe(this, Observer {
@@ -104,7 +104,7 @@ class SignupActivity : BaseActivity<SignupViewModel>() {
         })
 
         viewModel.nameField.observe(this, Observer {
-            if (et_name.text.toString() != it) et_name.setText(it)
+            if (etName.text.toString() != it) etName.setText(it)
         })
 
         viewModel.nameValidation.observe(this, Observer {

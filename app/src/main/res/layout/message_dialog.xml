@@ -29,6 +29,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/progressBar3"
         app:layout_constraintTop_toTopOf="@+id/progressBar3"
-        tools:text="@string/uploading_image_text" />
+        tools:text="@string/uploading_image" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 

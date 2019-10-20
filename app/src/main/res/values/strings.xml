@@ -59,6 +59,6 @@
 
     <!--  Loading messages  -->
     <string name="loading">Loading&#8230;</string>
-    <string name="uploading_image_text">Uploading Image&#8230;</string>
-    <string name="saving_profile_text">Saving Profile&#8230;</string>
+    <string name="uploading_image">Uploading Image&#8230;</string>
+    <string name="saving_profile">Saving Profile&#8230;</string>
 </resources>

@@ -7,11 +7,12 @@ import com.mindorks.bootcamp.instagram.data.repository.ProfileRepository
 import com.mindorks.bootcamp.instagram.data.repository.UserRepository
 import com.mindorks.bootcamp.instagram.di.TempDirectory
 import com.mindorks.bootcamp.instagram.ui.base.BaseActivity
+import com.mindorks.bootcamp.instagram.ui.common.dialog.LoadingDialog
 import com.mindorks.bootcamp.instagram.ui.login.LoginViewModel
 import com.mindorks.bootcamp.instagram.ui.main.MainSharedViewModel
 import com.mindorks.bootcamp.instagram.ui.main.MainViewModel
-import com.mindorks.bootcamp.instagram.ui.profile.edit.ChangePhotoViewModel
 import com.mindorks.bootcamp.instagram.ui.profile.edit.EditProfileViewModel
+import com.mindorks.bootcamp.instagram.ui.profile.edit.SelectPhotoDialog
 import com.mindorks.bootcamp.instagram.ui.signup.SignupViewModel
 import com.mindorks.bootcamp.instagram.ui.splash.SplashViewModel
 import com.mindorks.bootcamp.instagram.utils.ViewModelProviderFactory
@@ -34,6 +35,12 @@ class ActivityModule(private val activity: BaseActivity<*>) {
 
     @Provides
     fun provideLinearLayoutManager(): LinearLayoutManager = LinearLayoutManager(activity)
+
+    @Provides
+    fun provideSelectPhotoDialog() = SelectPhotoDialog()
+
+    @Provides
+    fun provideLoadingDialog() = LoadingDialog()
 
     @Provides
     fun provideSplashViewModel(
@@ -85,12 +92,14 @@ class ActivityModule(private val activity: BaseActivity<*>) {
         compositeDisposable: CompositeDisposable,
         networkHelper: NetworkHelper,
         userRepository: UserRepository,
-        profileRepository: ProfileRepository
+        profileRepository: ProfileRepository,
+        photoRepository: PhotoRepository,
+        @TempDirectory directory: File
     ): EditProfileViewModel = ViewModelProviders.of(
         activity, ViewModelProviderFactory(EditProfileViewModel::class) {
             EditProfileViewModel(
                 schedulerProvider, compositeDisposable, networkHelper,
-                userRepository, profileRepository
+                userRepository, profileRepository, photoRepository, directory
             )
         }).get(EditProfileViewModel::class.java)
 
@@ -103,22 +112,6 @@ class ActivityModule(private val activity: BaseActivity<*>) {
         activity, ViewModelProviderFactory(MainSharedViewModel::class) {
             MainSharedViewModel(schedulerProvider, compositeDisposable, networkHelper)
         }).get(MainSharedViewModel::class.java)
-
-    @Provides
-    fun provideChangePhotoViewModel(
-        schedulerProvider: SchedulerProvider,
-        compositeDisposable: CompositeDisposable,
-        networkHelper: NetworkHelper,
-        userRepository: UserRepository,
-        photoRepository: PhotoRepository,
-        @TempDirectory directory: File
-    ): ChangePhotoViewModel = ViewModelProviders.of(
-        activity, ViewModelProviderFactory(ChangePhotoViewModel::class) {
-            ChangePhotoViewModel(
-                schedulerProvider, compositeDisposable, networkHelper,
-                userRepository, photoRepository, directory
-            )
-        }).get(ChangePhotoViewModel::class.java)
 
     @Provides
     fun provideCamera() = Camera.Builder()

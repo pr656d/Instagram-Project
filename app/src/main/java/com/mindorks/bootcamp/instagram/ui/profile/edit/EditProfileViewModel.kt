@@ -3,25 +3,33 @@ package com.mindorks.bootcamp.instagram.ui.profile.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import com.mindorks.bootcamp.instagram.R
 import com.mindorks.bootcamp.instagram.data.model.Image
 import com.mindorks.bootcamp.instagram.data.model.Profile
 import com.mindorks.bootcamp.instagram.data.model.User
 import com.mindorks.bootcamp.instagram.data.remote.Networking
+import com.mindorks.bootcamp.instagram.data.repository.PhotoRepository
 import com.mindorks.bootcamp.instagram.data.repository.ProfileRepository
 import com.mindorks.bootcamp.instagram.data.repository.UserRepository
 import com.mindorks.bootcamp.instagram.ui.base.BaseViewModel
 import com.mindorks.bootcamp.instagram.utils.common.Event
-import com.mindorks.bootcamp.instagram.utils.log.Logger
+import com.mindorks.bootcamp.instagram.utils.common.FileUtils
+import com.mindorks.bootcamp.instagram.utils.common.Resource
 import com.mindorks.bootcamp.instagram.utils.network.NetworkHelper
 import com.mindorks.bootcamp.instagram.utils.rx.SchedulerProvider
+import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
+import java.io.File
+import java.io.InputStream
 
 class EditProfileViewModel(
     schedulerProvider: SchedulerProvider,
     compositeDisposable: CompositeDisposable,
     networkHelper: NetworkHelper,
     userRepository: UserRepository,
-    private val profileRepository: ProfileRepository
+    private val profileRepository: ProfileRepository,
+    private val photoRepository: PhotoRepository,
+    private val directory: File
 ) : BaseViewModel(schedulerProvider, compositeDisposable, networkHelper) {
 
     private val user: User = userRepository.getCurrentUser()!!
@@ -43,7 +51,7 @@ class EditProfileViewModel(
     }
 
     val loading: MutableLiveData<Boolean> = MutableLiveData()
-    val openDialogBox: MutableLiveData<Event<Unit>> = MutableLiveData()
+    val showSelectPhotoDialog: MutableLiveData<Event<Unit>> = MutableLiveData()
     val closeEditProfile: MutableLiveData<Event<Boolean>> = MutableLiveData()
     val redirectWithResult: MutableLiveData<Event<Boolean>> = MutableLiveData()
 
@@ -55,12 +63,7 @@ class EditProfileViewModel(
 
     fun onCloseClicked() = closeEditProfile.postValue(Event(true))
 
-    fun onChangePhotoClicked() = openDialogBox.postValue(Event(Unit))
-
-    fun onProfileUrlChanged(url: String) {
-        if (profileImage.value?.url != url)
-            profilePicUrl.postValue(url)
-    }
+    fun onChangePhotoClicked() = showSelectPhotoDialog.postValue(Event(Unit))
 
     override fun onCreate() {
         fetchProfile()
@@ -74,8 +77,6 @@ class EditProfileViewModel(
         val bio: String? = bioField.value
 
         val newProfile = Profile(profile.id, name, profilePicUrl, bio)
-
-        Logger.d(EditProfileActivity.TAG, "$newProfile")
 
         if (profile != newProfile) {
             compositeDisposable.add(
@@ -110,6 +111,72 @@ class EditProfileViewModel(
                         bioField.postValue(it.bio)
                         profilePicUrl.postValue(it.profilePicUrl)
 
+                        loading.postValue(false)
+                    },
+                    {
+                        handleNetworkError(it)
+                        loading.postValue(false)
+                    }
+                )
+        )
+    }
+
+    fun onGalleryImageSelected(inputStream: InputStream) {
+        loading.postValue(true)
+        compositeDisposable.add(
+            Single.fromCallable {
+                FileUtils.saveInputStreamToFile(
+                    inputStream, directory, "gallery_img_temp", 500
+                )
+            }
+                .subscribeOn(schedulerProvider.io())
+                .subscribe(
+                    {
+                        if (it != null) {
+                            FileUtils.getImageSize(it)?.run {
+                                uploadPhoto(it)
+                            }
+                        } else {
+                            loading.postValue(false)
+                            messageStringId.postValue(Resource.error(R.string.try_again))
+                        }
+                    },
+                    {
+                        loading.postValue(false)
+                        messageStringId.postValue(Resource.error(R.string.try_again))
+                    }
+                )
+        )
+    }
+
+    fun onCameraImageTaken(cameraImageProcessor: () -> String) {
+        loading.postValue(true)
+        compositeDisposable.add(
+            Single.fromCallable { cameraImageProcessor() }
+                .subscribeOn(schedulerProvider.io())
+                .subscribe(
+                    {
+                        File(it).apply {
+                            FileUtils.getImageSize(this)?.let { size ->
+                                uploadPhoto(this)
+                            } ?: loading.postValue(false)
+                        }
+                    },
+                    {
+                        loading.postValue(false)
+                        messageStringId.postValue(Resource.error(R.string.try_again))
+                    }
+                )
+        )
+    }
+
+    private fun uploadPhoto(imageFile: File) {
+        compositeDisposable.add(
+            photoRepository.uploadPhoto(imageFile, user)
+                .subscribeOn(schedulerProvider.io())
+                .subscribe(
+                    {
+                        profilePicUrl.postValue(it)
                         loading.postValue(false)
                     },
                     {
