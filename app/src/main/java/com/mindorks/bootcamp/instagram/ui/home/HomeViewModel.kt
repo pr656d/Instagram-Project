@@ -77,7 +77,7 @@ class HomeViewModel(
         loadMorePosts()
     }
 
-    fun onDelete(post: Post, doNotifyProfile: Boolean) {
+    fun onDeleteClick(post: Post, doNotifyProfile: Boolean) {
         allPostList.removeAll { it.id == post.id }
         refreshPosts.postValue(Resource.success(mutableListOf<Post>().apply { addAll(allPostList) }))
         if (doNotifyProfile) notifyProfile.postValue(Event(NotifyPostChange.delete(post)))
@@ -88,7 +88,7 @@ class HomeViewModel(
         refreshPosts.postValue(Resource.success(mutableListOf<Post>().apply { addAll(allPostList) }))
     }
 
-    fun onLike(post: Post, doNotifyProfile: Boolean) {
+    fun onLikeClick(post: Post, doNotifyProfile: Boolean) {
         if (doNotifyProfile) notifyProfile.postValue(Event(NotifyPostChange.like(post)))
         else {
             allPostList.run { forEachIndexed { i, p -> if (p.id == post.id) this[i] = post } }
@@ -96,7 +96,7 @@ class HomeViewModel(
         }
     }
 
-    fun onLikesCount(post: Post) =
+    fun onLikesCountClick(post: Post) =
         post.likedBy?.let {
             openLikedBy.postValue(
                 Event(
@@ -119,9 +119,9 @@ class HomeViewModel(
         when (change.state) {
             ChangeState.NEW_POST -> onNewPost(change.data)
 
-            ChangeState.LIKE -> onLike(change.data, false)
+            ChangeState.LIKE -> onLikeClick(change.data, false)
 
-            ChangeState.DELETE -> onDelete(change.data, false)
+            ChangeState.DELETE -> onDeleteClick(change.data, false)
         }
     }
 

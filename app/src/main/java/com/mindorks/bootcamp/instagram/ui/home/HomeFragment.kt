@@ -16,7 +16,6 @@ import com.mindorks.bootcamp.instagram.ui.main.MainSharedViewModel
 import com.mindorks.bootcamp.instagram.utils.common.Constants
 import com.mindorks.bootcamp.instagram.utils.common.PostClickListener
 import com.mindorks.bootcamp.instagram.utils.common.Receiver
-import com.mindorks.bootcamp.instagram.utils.log.Logger
 import kotlinx.android.synthetic.main.fragment_home.*
 import javax.inject.Inject
 
@@ -53,7 +52,6 @@ class HomeFragment : BaseFragment<HomeViewModel>(), PostClickListener {
 
         viewModel.openLikedBy.observe(this, Observer {
             it.getIfNotHandled()?.run {
-                Logger.d(TAG, "$this")
                 startActivity(
                     Intent(activity, LikedByActivity::class.java)
                         .putExtra(Constants.POST_EXTRA, this)
@@ -105,14 +103,14 @@ class HomeFragment : BaseFragment<HomeViewModel>(), PostClickListener {
     }
 
     override fun onDeleteClick(post: Post) {
-        viewModel.onDelete(post, true)
+        viewModel.onDeleteClick(post, true)
     }
 
     override fun onLikeClick(post: Post) {
-        viewModel.onLike(post, true)
+        viewModel.onLikeClick(post, true)
     }
 
     override fun onLikesCountClick(post: Post) {
-        viewModel.onLikesCount(post)
+        viewModel.onLikesCountClick(post)
     }
 }

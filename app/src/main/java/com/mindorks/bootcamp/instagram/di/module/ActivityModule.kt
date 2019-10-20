@@ -9,7 +9,7 @@ import com.mindorks.bootcamp.instagram.di.TempDirectory
 import com.mindorks.bootcamp.instagram.ui.base.BaseActivity
 import com.mindorks.bootcamp.instagram.ui.common.dialog.LoadingDialog
 import com.mindorks.bootcamp.instagram.ui.likedby.LikedByViewModel
-import com.mindorks.bootcamp.instagram.ui.likedby.recyclerview.LikedByAdapter
+import com.mindorks.bootcamp.instagram.ui.likedby.list.LikedByAdapter
 import com.mindorks.bootcamp.instagram.ui.login.LoginViewModel
 import com.mindorks.bootcamp.instagram.ui.main.MainSharedViewModel
 import com.mindorks.bootcamp.instagram.ui.main.MainViewModel

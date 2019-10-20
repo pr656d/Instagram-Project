@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mindorks.bootcamp.instagram.R
 import com.mindorks.bootcamp.instagram.di.component.ActivityComponent
 import com.mindorks.bootcamp.instagram.ui.base.BaseActivity
-import com.mindorks.bootcamp.instagram.ui.likedby.recyclerview.LikedByAdapter
+import com.mindorks.bootcamp.instagram.ui.likedby.list.LikedByAdapter
 import com.mindorks.bootcamp.instagram.utils.common.Constants
 import com.mindorks.bootcamp.instagram.utils.common.LikedByListListener
 import kotlinx.android.synthetic.main.activity_liked_by.*

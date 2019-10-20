@@ -1,4 +1,4 @@
-package com.mindorks.bootcamp.instagram.ui.likedby.recyclerview
+package com.mindorks.bootcamp.instagram.ui.likedby.list
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

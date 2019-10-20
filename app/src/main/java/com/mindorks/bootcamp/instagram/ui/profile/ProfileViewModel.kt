@@ -11,6 +11,7 @@ import com.mindorks.bootcamp.instagram.data.repository.PostRepository
 import com.mindorks.bootcamp.instagram.data.repository.ProfileRepository
 import com.mindorks.bootcamp.instagram.data.repository.UserRepository
 import com.mindorks.bootcamp.instagram.ui.base.BaseViewModel
+import com.mindorks.bootcamp.instagram.ui.likedby.LikedByParcelize
 import com.mindorks.bootcamp.instagram.utils.common.ChangeState
 import com.mindorks.bootcamp.instagram.utils.common.Event
 import com.mindorks.bootcamp.instagram.utils.common.NotifyPostChange
@@ -39,6 +40,7 @@ class ProfileViewModel(
 
     val launchLogout: MutableLiveData<Event<Map<String, String>>> = MutableLiveData()
     val launchEditProfile: MutableLiveData<Event<User>> = MutableLiveData()
+    val openLikedBy: MutableLiveData<Event<LikedByParcelize>> = MutableLiveData()
 
     val loading: MutableLiveData<Boolean> = MutableLiveData()
     val loggingOut: MutableLiveData<Resource<Boolean>> = MutableLiveData()
@@ -65,7 +67,7 @@ class ProfileViewModel(
         refreshPosts.postValue(Resource.success(mutableListOf<Post>().apply { addAll(myPostsList) }))
     }
 
-    fun onLike(post: Post, doNotifyHome: Boolean) =
+    fun onLikeClick(post: Post, doNotifyHome: Boolean) =
         if (doNotifyHome)
             notifyHome.postValue(Event(NotifyPostChange.like(post)))
         else {
@@ -73,19 +75,38 @@ class ProfileViewModel(
             refreshPosts.postValue(Resource.success(mutableListOf<Post>().apply { addAll(myPostsList) }))
         }
 
-    fun onDelete(post: Post, doNotifyHome: Boolean) {
+    fun onDeleteClick(post: Post, doNotifyHome: Boolean) {
         myPostsList.removeAll { it.id == post.id }
         refreshPosts.postValue(Resource.success(myPostsList))
         if (doNotifyHome) notifyHome.postValue(Event(NotifyPostChange.delete(post)))
     }
 
+    fun onLikesCountClick(post: Post) =
+        post.likedBy?.let {
+            openLikedBy.postValue(
+                Event(
+                    // Creating Parcelable object to pass to another activity
+                    LikedByParcelize(
+                        // Creating a list
+                        arrayListOf<LikedByParcelize.User>().run {
+                            // Converting mutable list to List with parcelable User object
+                            it.forEach { user ->
+                                add(LikedByParcelize.User(user.id, user.name, user.profilePicUrl))
+                            }
+                            toList()    // Returning as List
+                        }
+                    )
+                )
+            )
+        }
+
     fun onPostChange(change: NotifyPostChange<Post>) {
         when (change.state) {
             ChangeState.NEW_POST -> onNewPost(change.data)
 
-            ChangeState.LIKE -> onLike(change.data, false)
+            ChangeState.LIKE -> onLikeClick(change.data, false)
 
-            ChangeState.DELETE -> onDelete(change.data, false)
+            ChangeState.DELETE -> onDeleteClick(change.data, false)
         }
     }
 
