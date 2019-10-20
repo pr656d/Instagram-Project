@@ -8,8 +8,9 @@ import com.mindorks.bootcamp.instagram.data.repository.ProfileRepository
 import com.mindorks.bootcamp.instagram.data.repository.UserRepository
 import com.mindorks.bootcamp.instagram.di.TempDirectory
 import com.mindorks.bootcamp.instagram.ui.base.BaseFragment
+import com.mindorks.bootcamp.instagram.ui.common.dialog.LoadingDialog
+import com.mindorks.bootcamp.instagram.ui.common.posts.PostsAdapter
 import com.mindorks.bootcamp.instagram.ui.home.HomeViewModel
-import com.mindorks.bootcamp.instagram.ui.posts.PostsAdapter
 import com.mindorks.bootcamp.instagram.ui.main.MainSharedViewModel
 import com.mindorks.bootcamp.instagram.ui.photo.PhotoViewModel
 import com.mindorks.bootcamp.instagram.ui.profile.ProfileViewModel
@@ -32,6 +33,9 @@ class FragmentModule(private val fragment: BaseFragment<*>) {
 
     @Provides
     fun providePostsAdapter() = PostsAdapter(fragment.lifecycle, ArrayList(), fragment as PostChangeListener)
+
+    @Provides
+    fun provideLoadingDialog() = LoadingDialog()
 
     @Provides
     fun provideHomeViewModel(

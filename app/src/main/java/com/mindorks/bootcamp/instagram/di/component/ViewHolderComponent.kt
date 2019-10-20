@@ -2,7 +2,7 @@ package com.mindorks.bootcamp.instagram.di.component
 
 import com.mindorks.bootcamp.instagram.di.ViewModelScope
 import com.mindorks.bootcamp.instagram.di.module.ViewHolderModule
-import com.mindorks.bootcamp.instagram.ui.posts.PostItemViewHolder
+import com.mindorks.bootcamp.instagram.ui.common.posts.PostItemViewHolder
 import dagger.Component
 
 @ViewModelScope

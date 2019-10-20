@@ -1,4 +1,4 @@
-package com.mindorks.bootcamp.instagram.ui.posts
+package com.mindorks.bootcamp.instagram.ui.common.posts
 
 import android.view.View
 import android.view.ViewGroup

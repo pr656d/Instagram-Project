@@ -8,6 +8,7 @@ import androidx.lifecycle.Observer
 import com.mindorks.bootcamp.instagram.R
 import com.mindorks.bootcamp.instagram.di.component.FragmentComponent
 import com.mindorks.bootcamp.instagram.ui.base.BaseFragment
+import com.mindorks.bootcamp.instagram.ui.common.dialog.LoadingDialog
 import com.mindorks.bootcamp.instagram.ui.main.MainSharedViewModel
 import com.mindorks.bootcamp.instagram.utils.common.NotifyPostChange
 import com.mindorks.bootcamp.instagram.utils.common.Receiver
@@ -32,6 +33,9 @@ class PhotoFragment : BaseFragment<PhotoViewModel>() {
     }
 
     @Inject
+    lateinit var loadingDialog: LoadingDialog
+
+    @Inject
     lateinit var camera: Camera
 
     @Inject
@@ -47,7 +51,17 @@ class PhotoFragment : BaseFragment<PhotoViewModel>() {
         super.setupObservers()
 
         viewModel.loading.observe(this, Observer {
-            pb_loading.visibility = if (it) View.VISIBLE else View.GONE
+            if (it) {
+                loadingDialog.apply {
+                    isCancelable = false
+                    arguments = Bundle().apply {
+                        putInt(LoadingDialog.MESSAGE_KEY, R.string.uploading_image_text)
+                    }
+                }
+                loadingDialog.show(fragmentManager, LoadingDialog.TAG)
+            } else {
+                loadingDialog.dismiss()
+            }
         })
 
         viewModel.post.observe(this, Observer {
@@ -75,6 +89,13 @@ class PhotoFragment : BaseFragment<PhotoViewModel>() {
                 e.printStackTrace()
             }
         }
+        loadingDialog.apply {
+            isCancelable = false
+            arguments = Bundle().apply {
+                putInt(LoadingDialog.MESSAGE_KEY, R.string.uploading_image_text)
+            }
+        }
+        loadingDialog.show(fragmentManager, LoadingDialog.TAG)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {

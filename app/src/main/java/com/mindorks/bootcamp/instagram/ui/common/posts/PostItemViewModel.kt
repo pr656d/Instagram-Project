@@ -1,4 +1,4 @@
-package com.mindorks.bootcamp.instagram.ui.posts
+package com.mindorks.bootcamp.instagram.ui.common.posts
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

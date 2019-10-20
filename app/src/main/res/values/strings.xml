@@ -50,12 +50,15 @@
     <string name="bio_label_hint">Bio</string>
     <string name="private_info_label">Private Information</string>
     <string name="email_hint">Email Address</string>
-    <string name="uploading_image_text">Uploading Image Please Wait&#8230;</string>
-    <string name="saving_profile_text">Saving Profile Please Wait&#8230;</string>
     <string name="zero_text">0</string>
 
     <!--  photo  -->
     <string name="camera">Camera</string>
     <string name="gallery">Gallery</string>
     <string name="try_again">Please try again</string>
+
+    <!--  Loading messages  -->
+    <string name="loading">Loading&#8230;</string>
+    <string name="uploading_image_text">Uploading Image&#8230;</string>
+    <string name="saving_profile_text">Saving Profile&#8230;</string>
 </resources>

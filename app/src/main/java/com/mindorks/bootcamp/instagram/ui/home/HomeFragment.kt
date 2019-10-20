@@ -10,7 +10,7 @@ import com.mindorks.bootcamp.instagram.data.model.Post
 import com.mindorks.bootcamp.instagram.di.component.FragmentComponent
 import com.mindorks.bootcamp.instagram.ui.base.BaseFragment
 import com.mindorks.bootcamp.instagram.ui.main.MainSharedViewModel
-import com.mindorks.bootcamp.instagram.ui.posts.PostsAdapter
+import com.mindorks.bootcamp.instagram.ui.common.posts.PostsAdapter
 import com.mindorks.bootcamp.instagram.utils.common.PostChangeListener
 import com.mindorks.bootcamp.instagram.utils.common.Receiver
 import kotlinx.android.synthetic.main.fragment_home.*
