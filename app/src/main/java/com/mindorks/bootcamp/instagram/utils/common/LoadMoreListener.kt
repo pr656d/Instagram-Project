@@ -2,14 +2,20 @@ package com.mindorks.bootcamp.instagram.utils.common
 
 import com.mindorks.bootcamp.instagram.data.model.Post
 
-interface PostChangeListener {
-    fun onDelete(post: Post)
+interface PostClickListener {
+    fun onDeleteClick(post: Post)
 
-    fun onLike(post: Post)
+    fun onLikeClick(post: Post)
+
+    fun onLikesCountClick(post: Post)
 }
 
 interface SelectPhotoDialogListener {
     fun onGalleryClick()
 
     fun onCameraClick()
+}
+
+interface LikedByListListener {
+    fun onLikesClick(userId: String)
 }

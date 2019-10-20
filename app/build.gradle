@@ -33,6 +33,10 @@ android {
             buildConfigField("String", "API_KEY", "\"HBNA19QVVAPP\"")
         }
     }
+
+    androidExtensions {
+        experimental = true
+    }
 }
 
 dependencies {

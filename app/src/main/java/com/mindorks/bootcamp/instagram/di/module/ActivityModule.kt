@@ -8,6 +8,8 @@ import com.mindorks.bootcamp.instagram.data.repository.UserRepository
 import com.mindorks.bootcamp.instagram.di.TempDirectory
 import com.mindorks.bootcamp.instagram.ui.base.BaseActivity
 import com.mindorks.bootcamp.instagram.ui.common.dialog.LoadingDialog
+import com.mindorks.bootcamp.instagram.ui.likedby.LikedByViewModel
+import com.mindorks.bootcamp.instagram.ui.likedby.recyclerview.LikedByAdapter
 import com.mindorks.bootcamp.instagram.ui.login.LoginViewModel
 import com.mindorks.bootcamp.instagram.ui.main.MainSharedViewModel
 import com.mindorks.bootcamp.instagram.ui.main.MainViewModel
@@ -17,6 +19,7 @@ import com.mindorks.bootcamp.instagram.ui.signup.SignupViewModel
 import com.mindorks.bootcamp.instagram.ui.splash.SplashViewModel
 import com.mindorks.bootcamp.instagram.utils.ViewModelProviderFactory
 import com.mindorks.bootcamp.instagram.utils.common.Constants
+import com.mindorks.bootcamp.instagram.utils.common.LikedByListListener
 import com.mindorks.bootcamp.instagram.utils.network.NetworkHelper
 import com.mindorks.bootcamp.instagram.utils.rx.SchedulerProvider
 import com.mindorks.paracamera.Camera
@@ -35,6 +38,14 @@ class ActivityModule(private val activity: BaseActivity<*>) {
 
     @Provides
     fun provideLinearLayoutManager(): LinearLayoutManager = LinearLayoutManager(activity)
+
+    @Provides
+    fun provideLikedByAdapter(): LikedByAdapter =
+        LikedByAdapter(
+            activity.lifecycle,
+            ArrayList(),
+            activity as LikedByListListener
+        )
 
     @Provides
     fun provideSelectPhotoDialog() = SelectPhotoDialog()
@@ -75,7 +86,7 @@ class ActivityModule(private val activity: BaseActivity<*>) {
         activity, ViewModelProviderFactory(SignupViewModel::class) {
             SignupViewModel(schedulerProvider, compositeDisposable, networkHelper, userRepository)
         }).get(SignupViewModel::class.java)
-    
+
     @Provides
     fun provideMainViewModel(
         schedulerProvider: SchedulerProvider,
@@ -102,6 +113,16 @@ class ActivityModule(private val activity: BaseActivity<*>) {
                 userRepository, profileRepository, photoRepository, directory
             )
         }).get(EditProfileViewModel::class.java)
+
+    @Provides
+    fun provideLikedByViewModel(
+        schedulerProvider: SchedulerProvider,
+        compositeDisposable: CompositeDisposable,
+        networkHelper: NetworkHelper
+    ): LikedByViewModel = ViewModelProviders.of(
+        activity, ViewModelProviderFactory(LikedByViewModel::class) {
+            LikedByViewModel(schedulerProvider, compositeDisposable, networkHelper)
+        }).get(LikedByViewModel::class.java)
 
     @Provides
     fun provideMainSharedViewModel(

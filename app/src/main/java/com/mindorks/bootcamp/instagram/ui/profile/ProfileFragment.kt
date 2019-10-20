@@ -21,7 +21,7 @@ import com.mindorks.bootcamp.instagram.utils.common.*
 import kotlinx.android.synthetic.main.fragment_profile.*
 import javax.inject.Inject
 
-class ProfileFragment : BaseFragment<ProfileViewModel>(), PostChangeListener {
+class ProfileFragment : BaseFragment<ProfileViewModel>(), PostClickListener {
 
     companion object {
 
@@ -55,7 +55,7 @@ class ProfileFragment : BaseFragment<ProfileViewModel>(), PostChangeListener {
         viewModel.launchEditProfile.observe(this, Observer {
             it.getIfNotHandled()?.run {
                 startActivityForResult(
-                    Intent(context!!.applicationContext, EditProfileActivity::class.java),
+                    Intent(activity, EditProfileActivity::class.java),
                     Constants.EDIT_PROFILE_CODE
                 )
             }
@@ -184,12 +184,16 @@ class ProfileFragment : BaseFragment<ProfileViewModel>(), PostChangeListener {
         }
     }
 
-    override fun onDelete(post: Post) {
+    override fun onDeleteClick(post: Post) {
         viewModel.onDelete(post, true)
     }
 
-    override fun onLike(post: Post) {
+    override fun onLikeClick(post: Post) {
         viewModel.onLike(post, true)
+    }
+
+    override fun onLikesCountClick(post: Post) {
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

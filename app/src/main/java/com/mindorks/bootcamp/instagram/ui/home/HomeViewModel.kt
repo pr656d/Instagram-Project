@@ -6,6 +6,7 @@ import com.mindorks.bootcamp.instagram.data.model.User
 import com.mindorks.bootcamp.instagram.data.repository.PostRepository
 import com.mindorks.bootcamp.instagram.data.repository.UserRepository
 import com.mindorks.bootcamp.instagram.ui.base.BaseViewModel
+import com.mindorks.bootcamp.instagram.ui.likedby.LikedByParcelize
 import com.mindorks.bootcamp.instagram.utils.common.ChangeState
 import com.mindorks.bootcamp.instagram.utils.common.Event
 import com.mindorks.bootcamp.instagram.utils.common.NotifyPostChange
@@ -30,11 +31,13 @@ class HomeViewModel(
     val posts: MutableLiveData<Resource<List<Post>>> = MutableLiveData()
     val refreshPosts: MutableLiveData<Resource<List<Post>>> = MutableLiveData()
     val notifyProfile: MutableLiveData<Event<NotifyPostChange<Post>>> = MutableLiveData()
+    val openLikedBy: MutableLiveData<Event<LikedByParcelize>> = MutableLiveData()
 
     private var firstId: String? = null
     private var lastId: String? = null
 
-    private val user: User = userRepository.getCurrentUser()!! // should not be used without logged in
+    private val user: User =
+        userRepository.getCurrentUser()!! // should not be used without logged in
 
     init {
         compositeDisposable.add(
@@ -92,6 +95,25 @@ class HomeViewModel(
             refreshPosts.postValue(Resource.success(mutableListOf<Post>().apply { addAll(allPostList) }))
         }
     }
+
+    fun onLikesCount(post: Post) =
+        post.likedBy?.let {
+            openLikedBy.postValue(
+                Event(
+                    // Creating Parcelable object to pass to another activity
+                    LikedByParcelize(
+                        // Creating a list
+                        arrayListOf<LikedByParcelize.User>().run {
+                            // Converting mutable list to List with parcelable User object
+                            it.forEach { user ->
+                                add(LikedByParcelize.User(user.id, user.name, user.profilePicUrl))
+                            }
+                            toList()    // Returning as List
+                        }
+                    )
+                )
+            )
+        }
 
     fun onPostChange(change: NotifyPostChange<Post>) {
         when (change.state) {

@@ -1,5 +1,6 @@
 package com.mindorks.bootcamp.instagram.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
@@ -10,13 +11,16 @@ import com.mindorks.bootcamp.instagram.data.model.Post
 import com.mindorks.bootcamp.instagram.di.component.FragmentComponent
 import com.mindorks.bootcamp.instagram.ui.base.BaseFragment
 import com.mindorks.bootcamp.instagram.ui.common.posts.PostsAdapter
+import com.mindorks.bootcamp.instagram.ui.likedby.LikedByActivity
 import com.mindorks.bootcamp.instagram.ui.main.MainSharedViewModel
-import com.mindorks.bootcamp.instagram.utils.common.PostChangeListener
+import com.mindorks.bootcamp.instagram.utils.common.Constants
+import com.mindorks.bootcamp.instagram.utils.common.PostClickListener
 import com.mindorks.bootcamp.instagram.utils.common.Receiver
+import com.mindorks.bootcamp.instagram.utils.log.Logger
 import kotlinx.android.synthetic.main.fragment_home.*
 import javax.inject.Inject
 
-class HomeFragment : BaseFragment<HomeViewModel>(), PostChangeListener {
+class HomeFragment : BaseFragment<HomeViewModel>(), PostClickListener {
 
     companion object {
 
@@ -46,6 +50,16 @@ class HomeFragment : BaseFragment<HomeViewModel>(), PostChangeListener {
 
     override fun setupObservers() {
         super.setupObservers()
+
+        viewModel.openLikedBy.observe(this, Observer {
+            it.getIfNotHandled()?.run {
+                Logger.d(TAG, "$this")
+                startActivity(
+                    Intent(activity, LikedByActivity::class.java)
+                        .putExtra(Constants.POST_EXTRA, this)
+                )
+            }
+        })
 
         viewModel.loading.observe(this, Observer {
             progressBar.visibility = if (it) View.VISIBLE else View.GONE
@@ -90,11 +104,15 @@ class HomeFragment : BaseFragment<HomeViewModel>(), PostChangeListener {
         }
     }
 
-    override fun onDelete(post: Post) {
+    override fun onDeleteClick(post: Post) {
         viewModel.onDelete(post, true)
     }
 
-    override fun onLike(post: Post) {
+    override fun onLikeClick(post: Post) {
         viewModel.onLike(post, true)
+    }
+
+    override fun onLikesCountClick(post: Post) {
+        viewModel.onLikesCount(post)
     }
 }

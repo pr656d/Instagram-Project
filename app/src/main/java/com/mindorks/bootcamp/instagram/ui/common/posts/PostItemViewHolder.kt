@@ -17,9 +17,8 @@ class PostItemViewHolder(
     private val adapter: PostsAdapter
 ) : BaseItemViewHolder<Post, PostItemViewModel>(R.layout.item_view_post, parent) {
 
-    override fun injectDependencies(viewHolderComponent: ViewHolderComponent) {
+    override fun injectDependencies(viewHolderComponent: ViewHolderComponent) =
         viewHolderComponent.inject(this)
-    }
 
     override fun setupObservers() {
         super.setupObservers()
@@ -43,13 +42,19 @@ class PostItemViewHolder(
 
         viewModel.postDeleted.observe(this, Observer {
             it.getIfNotHandled()?.run {
-                adapter.itemDeleteClick(viewModel.data.value!!)
+                adapter.onDeleteClick(this)
             }
         })
 
         viewModel.likeClicked.observe(this, Observer {
             it.getIfNotHandled()?.run {
-                adapter.itemLikeClick(viewModel.data.value!!)
+                adapter.onLikeBtnClick(this)
+            }
+        })
+
+        viewModel.likesCountClicked.observe(this, Observer {
+            it.getIfNotHandled()?.run {
+                adapter.onLikesCountClick(this)
             }
         })
 
@@ -101,5 +106,6 @@ class PostItemViewHolder(
     override fun setupView(view: View) {
         itemView.ivLike.setOnClickListener { viewModel.onLikeClick() }
         itemView.ivDelete.setOnClickListener { viewModel.onDeleteClick() }
+        itemView.tvLikesCount.setOnClickListener { viewModel.onLikesCountClick() }
     }
 }

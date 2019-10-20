@@ -40,8 +40,9 @@ class PostItemViewModel @Inject constructor(
         Pair(Networking.HEADER_ACCESS_TOKEN, user.accessToken)
     )
 
-    val postDeleted: MutableLiveData<Event<Unit>> = MutableLiveData()
-    val likeClicked: MutableLiveData<Event<Unit>> = MutableLiveData()
+    val postDeleted: MutableLiveData<Event<Post>> = MutableLiveData()
+    val likeClicked: MutableLiveData<Event<Post>> = MutableLiveData()
+    val likesCountClicked: MutableLiveData<Event<Post>> = MutableLiveData()
     val isOwner: LiveData<Boolean> = Transformations.map(data) { it.creator.id == user.id}
     val name: LiveData<String> = Transformations.map(data) { it.creator.name }
     val postTime: LiveData<String> = Transformations.map(data) { TimeUtils.getTimeAgo(it.createdAt) }
@@ -76,7 +77,7 @@ class PostItemViewModel @Inject constructor(
                     .subscribeOn(schedulerProvider.io())
                     .subscribe(
                         { response ->
-                            if (response) postDeleted.postValue(Event(Unit))
+                            if (response) postDeleted.postValue(Event(data.value!!))
                         },
                         { error -> handleNetworkError(error) }
                     )
@@ -99,7 +100,7 @@ class PostItemViewModel @Inject constructor(
                 .subscribe(
                     { responsePost ->
                         if (responsePost.id == it.id) {
-                            likeClicked.postValue(Event(Unit))
+                            likeClicked.postValue(Event(data.value!!))
                             updateData(responsePost)
                         }
                     },
@@ -110,4 +111,6 @@ class PostItemViewModel @Inject constructor(
             messageStringId.postValue(Resource.error(R.string.network_connection_error))
         }
     }
+
+    fun onLikesCountClick() = likesCountClicked.postValue(Event(data.value!!))
 }
