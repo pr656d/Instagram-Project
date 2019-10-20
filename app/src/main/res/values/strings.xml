@@ -25,10 +25,12 @@
     <string name="sign_up_with_email">Sign Up with Email</string>
     <string name="login_with_email">Login with Email</string>
     <string name="name_field_empty">Name can\'t be empty</string>
+    <string name="logging_in">Logging in&#8230;</string>
+    <string name="signing_up">Signing up&#8230;</string>
 
     <!--  Logout  -->
     <string name="logout_error">Can\'t logout. Try again</string>
-    <string name="logging_out_text">Logging Out&#8230;</string>
+    <string name="logging_out">Logging Out&#8230;</string>
 
     <!-- menu -->
     <string name="menu_home">Home</string>

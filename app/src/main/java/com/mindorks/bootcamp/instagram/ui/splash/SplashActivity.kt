@@ -18,12 +18,10 @@ class SplashActivity : BaseActivity<SplashViewModel>() {
 
     override fun provideLayoutId(): Int = R.layout.activity_splash
 
-    override fun injectDependencies(activityComponent: ActivityComponent) {
+    override fun injectDependencies(activityComponent: ActivityComponent) =
         activityComponent.inject(this)
-    }
 
-    override fun setupView(savedInstanceState: Bundle?) {
-    }
+    override fun setupView(savedInstanceState: Bundle?) {}
 
     override fun setupObservers() {
         super.setupObservers()

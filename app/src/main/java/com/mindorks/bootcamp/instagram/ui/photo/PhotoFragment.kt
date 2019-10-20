@@ -43,18 +43,19 @@ class PhotoFragment : BaseFragment<PhotoViewModel>() {
 
     override fun provideLayoutId(): Int = R.layout.fragment_photo
 
-    override fun injectDependencies(fragmentComponent: FragmentComponent) {
+    override fun injectDependencies(fragmentComponent: FragmentComponent) =
         fragmentComponent.inject(this)
-    }
 
     override fun setupObservers() {
         super.setupObservers()
 
         viewModel.loading.observe(this, Observer {
-            if (it) {
+            if (it)
                 loadingDialog.show(fragmentManager, LoadingDialog.TAG)
-            } else {
-                try { loadingDialog.dismiss() } catch (e: NullPointerException) { }
+            else try {
+                loadingDialog.dismiss()
+            } catch (e: NullPointerException) {
+                // Sometime this happens
             }
         })
 

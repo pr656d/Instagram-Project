@@ -38,5 +38,4 @@ class SelectPhotoDialog : AppCompatDialogFragment() {
 
         return AlertDialog.Builder(activity).setView(view).create()
     }
-
 }

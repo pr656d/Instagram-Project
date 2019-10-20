@@ -4,23 +4,27 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.View
 import androidx.lifecycle.Observer
 import com.mindorks.bootcamp.instagram.R
 import com.mindorks.bootcamp.instagram.di.component.ActivityComponent
 import com.mindorks.bootcamp.instagram.ui.base.BaseActivity
+import com.mindorks.bootcamp.instagram.ui.common.dialog.LoadingDialog
 import com.mindorks.bootcamp.instagram.ui.login.LoginActivity
 import com.mindorks.bootcamp.instagram.ui.main.MainActivity
 import com.mindorks.bootcamp.instagram.utils.common.Status
 import kotlinx.android.synthetic.main.activity_login.etEmail
 import kotlinx.android.synthetic.main.activity_login.et_password
 import kotlinx.android.synthetic.main.activity_signup.*
+import javax.inject.Inject
 
 class SignupActivity : BaseActivity<SignupViewModel>() {
 
     companion object {
         const val TAG = "SignupActivity"
     }
+
+    @Inject
+    lateinit var loadingDialog: LoadingDialog
 
     override fun provideLayoutId(): Int = R.layout.activity_signup
 
@@ -62,6 +66,13 @@ class SignupActivity : BaseActivity<SignupViewModel>() {
         bt_signup.setOnClickListener { viewModel.onSignup() }
 
         tv_login.setOnClickListener { viewModel.onLoginClicked() }
+
+        loadingDialog.apply {
+            isCancelable = false
+            arguments = Bundle().apply {
+                putInt(LoadingDialog.MESSAGE_KEY, R.string.signing_up)
+            }
+        }
     }
 
     override fun setupObservers() {
@@ -115,7 +126,13 @@ class SignupActivity : BaseActivity<SignupViewModel>() {
         })
 
         viewModel.signingUp.observe(this, Observer {
-            pb_loading.visibility = if (it) View.VISIBLE else View.GONE
+            if (it)
+                loadingDialog.show(supportFragmentManager, LoadingDialog.TAG)
+            else try {
+                loadingDialog.dismiss()
+            } catch (e: NullPointerException) {
+                // Sometime this happens
+            }
         })
     }
 }

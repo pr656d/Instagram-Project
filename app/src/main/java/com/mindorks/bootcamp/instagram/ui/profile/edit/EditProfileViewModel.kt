@@ -78,9 +78,11 @@ class EditProfileViewModel(
 
         val newProfile = Profile(profile.id, name, profilePicUrl, bio)
 
-        if (profile != newProfile) {
+        if (profile != newProfile)
             compositeDisposable.add(
-                profileRepository.updateProfile(user, name, profilePicUrl, bio)
+                profileRepository.updateProfile(
+                    user, newProfile.name, newProfile.profilePicUrl, newProfile.bio
+                )
                     .subscribeOn(schedulerProvider.io())
                     .subscribe(
                         {
@@ -93,6 +95,9 @@ class EditProfileViewModel(
                         }
                     )
             )
+        else {
+            loading.postValue(false)
+            redirectWithResult.postValue(Event(false))
         }
     }
 
@@ -157,7 +162,7 @@ class EditProfileViewModel(
                 .subscribe(
                     {
                         File(it).apply {
-                            FileUtils.getImageSize(this)?.let { size ->
+                            FileUtils.getImageSize(this)?.let {
                                 uploadPhoto(this)
                             } ?: loading.postValue(false)
                         }
@@ -170,7 +175,7 @@ class EditProfileViewModel(
         )
     }
 
-    private fun uploadPhoto(imageFile: File) {
+    private fun uploadPhoto(imageFile: File) =
         compositeDisposable.add(
             photoRepository.uploadPhoto(imageFile, user)
                 .subscribeOn(schedulerProvider.io())
@@ -185,5 +190,4 @@ class EditProfileViewModel(
                     }
                 )
         )
-    }
 }

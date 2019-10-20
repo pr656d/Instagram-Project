@@ -46,9 +46,8 @@ class ProfileFragment : BaseFragment<ProfileViewModel>(), PostChangeListener {
 
     override fun provideLayoutId(): Int = R.layout.fragment_profile
 
-    override fun injectDependencies(fragmentComponent: FragmentComponent) {
+    override fun injectDependencies(fragmentComponent: FragmentComponent) =
         fragmentComponent.inject(this)
-    }
 
     override fun setupObservers() {
         super.setupObservers()
@@ -97,7 +96,7 @@ class ProfileFragment : BaseFragment<ProfileViewModel>(), PostChangeListener {
                         progressBar.visibility = View.VISIBLE
 
                         tvLogout.apply {
-                            setText(R.string.logging_out_text)
+                            setText(R.string.logging_out)
                             isEnabled = false
                         }
 

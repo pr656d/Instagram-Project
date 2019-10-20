@@ -65,13 +65,13 @@ class ProfileViewModel(
         refreshPosts.postValue(Resource.success(mutableListOf<Post>().apply { addAll(myPostsList) }))
     }
 
-    fun onLike(post: Post, doNotifyHome: Boolean) {
-        if (doNotifyHome) notifyHome.postValue(Event(NotifyPostChange.like(post)))
+    fun onLike(post: Post, doNotifyHome: Boolean) =
+        if (doNotifyHome)
+            notifyHome.postValue(Event(NotifyPostChange.like(post)))
         else {
             myPostsList.run { forEachIndexed { i, p -> if (p.id == post.id) this[i] = post } }
             refreshPosts.postValue(Resource.success(mutableListOf<Post>().apply { addAll(myPostsList) }))
         }
-    }
 
     fun onDelete(post: Post, doNotifyHome: Boolean) {
         myPostsList.removeAll { it.id == post.id }

@@ -16,6 +16,7 @@ import com.mindorks.bootcamp.instagram.ui.common.dialog.LoadingDialog
 import com.mindorks.bootcamp.instagram.utils.common.Constants
 import com.mindorks.bootcamp.instagram.utils.common.GlideHelper
 import com.mindorks.bootcamp.instagram.utils.common.SelectPhotoDialogListener
+import com.mindorks.bootcamp.instagram.utils.log.Logger
 import com.mindorks.paracamera.Camera
 import kotlinx.android.synthetic.main.activity_edit_profile.*
 import java.io.FileNotFoundException
@@ -137,10 +138,16 @@ class EditProfileActivity : BaseActivity<EditProfileViewModel>(), SelectPhotoDia
         })
 
         viewModel.loading.observe(this, Observer {
+            Logger.d(TAG, "BOOLEAN : $it")
             if (it) {
+                Logger.d(TAG, "SHOWING")
                 loadingDialog.show(supportFragmentManager, LoadingDialog.TAG)
-            } else {
-                try { loadingDialog.dismiss() } catch (e: NullPointerException) { }
+            }
+            else try {
+                Logger.d(TAG, "DISMISS")
+                loadingDialog.dismiss()
+            } catch (e: NullPointerException) {
+                // Sometime this happens
             }
         })
 
@@ -164,6 +171,10 @@ class EditProfileActivity : BaseActivity<EditProfileViewModel>(), SelectPhotoDia
             }.run {
                 startActivityForResult(this, Constants.GALLERY_IMG_CODE)
             }
+
+        // Surely selectPhotoDialog is not null
+        // Because when user clicks on change photo then only this dialog is shown
+        // And after callback from dialog here we call dismiss.
         selectPhotoDialog.dismiss()
     }
 
@@ -173,6 +184,10 @@ class EditProfileActivity : BaseActivity<EditProfileViewModel>(), SelectPhotoDia
         } catch (e: Exception) {
             e.printStackTrace()
         }
+
+        // Surely selectPhotoDialog is not null
+        // Because when user clicks on change photo then only this dialog is shown
+        // And after callback from dialog here we call dismiss.
         selectPhotoDialog.dismiss()
     }
 

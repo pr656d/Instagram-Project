@@ -4,16 +4,17 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.View
 import androidx.lifecycle.Observer
 import com.mindorks.bootcamp.instagram.R
 import com.mindorks.bootcamp.instagram.di.component.ActivityComponent
 import com.mindorks.bootcamp.instagram.ui.base.BaseActivity
+import com.mindorks.bootcamp.instagram.ui.common.dialog.LoadingDialog
 import com.mindorks.bootcamp.instagram.ui.main.MainActivity
 import com.mindorks.bootcamp.instagram.ui.signup.SignupActivity
 import com.mindorks.bootcamp.instagram.utils.common.Event
 import com.mindorks.bootcamp.instagram.utils.common.Status
 import kotlinx.android.synthetic.main.activity_login.*
+import javax.inject.Inject
 
 class LoginActivity : BaseActivity<LoginViewModel>() {
 
@@ -21,11 +22,13 @@ class LoginActivity : BaseActivity<LoginViewModel>() {
         const val TAG = "LoginActivity"
     }
 
+    @Inject
+    lateinit var loadingDialog: LoadingDialog
+
     override fun provideLayoutId(): Int = R.layout.activity_login
 
-    override fun injectDependencies(activityComponent: ActivityComponent) {
+    override fun injectDependencies(activityComponent: ActivityComponent) =
         activityComponent.inject(this)
-    }
 
     override fun setupView(savedInstanceState: Bundle?) {
 
@@ -51,6 +54,13 @@ class LoginActivity : BaseActivity<LoginViewModel>() {
 
         tv_signup.setOnClickListener {
             viewModel.onSignUpClicked()
+        }
+
+        loadingDialog.apply {
+            isCancelable = false
+            arguments = Bundle().apply {
+                putInt(LoadingDialog.MESSAGE_KEY, R.string.logging_in)
+            }
         }
     }
 
@@ -96,7 +106,13 @@ class LoginActivity : BaseActivity<LoginViewModel>() {
         })
 
         viewModel.loggingIn.observe(this, Observer {
-            pb_loading.visibility = if (it) View.VISIBLE else View.GONE
+            if (it)
+                loadingDialog.show(supportFragmentManager, LoadingDialog.TAG)
+            else try {
+                loadingDialog.dismiss()
+            } catch (e: NullPointerException) {
+                // Sometime this happens
+            }
         })
     }
 }
