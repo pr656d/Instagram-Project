@@ -11,6 +11,7 @@ import com.mindorks.bootcamp.instagram.utils.common.Event
 import com.mindorks.bootcamp.instagram.utils.common.Notify
 import com.mindorks.bootcamp.instagram.utils.common.NotifyFor
 import com.mindorks.bootcamp.instagram.utils.common.Resource
+import com.mindorks.bootcamp.instagram.utils.log.Logger
 import com.mindorks.bootcamp.instagram.utils.network.NetworkHelper
 import com.mindorks.bootcamp.instagram.utils.rx.SchedulerProvider
 import io.reactivex.disposables.CompositeDisposable
@@ -88,6 +89,37 @@ class HomeViewModel(
         refreshPosts.postValue(Resource.success(mutableListOf<Post>().apply { addAll(allPostList) }))
     }
 
+    private fun onNameChange(newName: String) {
+        Logger.d(HomeFragment.TAG, "onNameChange")
+        allPostList.run {
+            forEachIndexed { i, p ->
+                // Find post and replace with new Post
+                if (this[i].creator.id == user.id)
+                    this[i] = Post(
+                        p.id, p.imageUrl, p.imageWidth, p.imageHeight,
+                        Post.User(p.creator.id, newName, p.creator.profilePicUrl),
+                        p.likedBy, p.createdAt
+                    )
+            }
+        }
+        refreshPosts.postValue(Resource.success(mutableListOf<Post>().apply { addAll(allPostList) }))
+    }
+
+    private fun onProfileImageChange(newProfilePicUrl: String) {
+        allPostList.run {
+            forEachIndexed { i, p ->
+                // Find post and replace with new Post
+                if (this[i].creator.id == user.id)
+                    this[i] = Post(
+                        p.id, p.imageUrl, p.imageWidth, p.imageHeight,
+                        Post.User(p.creator.id, p.creator.name, newProfilePicUrl),
+                        p.likedBy, p.createdAt
+                    )
+            }
+        }
+        refreshPosts.postValue(Resource.success(mutableListOf<Post>().apply { addAll(allPostList) }))
+    }
+
     fun onLikeClick(post: Post, doNotifyProfile: Boolean) {
         if (doNotifyProfile) notifyProfile.postValue(Event(NotifyFor.like(post)))
         else {
@@ -115,13 +147,17 @@ class HomeViewModel(
             )
         }
 
-    fun onPostChange(change: NotifyFor<Post>) {
+    fun onPostChange(change: NotifyFor<Any>) {
         when (change.state) {
-            Notify.NEW_POST -> onNewPost(change.data)
+            Notify.NEW_POST -> onNewPost(change.data as Post)
 
-            Notify.LIKE -> onLikeClick(change.data, false)
+            Notify.LIKE -> onLikeClick(change.data as Post, false)
 
-            Notify.DELETE -> onDeleteClick(change.data, false)
+            Notify.DELETE -> onDeleteClick(change.data as Post, false)
+
+            Notify.NAME -> onNameChange(change.data as String)
+
+            Notify.PROFILE_IMAGE -> onProfileImageChange(change.data as String)
 
             else -> {}
         }

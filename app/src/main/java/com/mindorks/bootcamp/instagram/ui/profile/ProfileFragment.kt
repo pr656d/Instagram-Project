@@ -19,10 +19,8 @@ import com.mindorks.bootcamp.instagram.ui.likedby.LikedByActivity
 import com.mindorks.bootcamp.instagram.ui.login.LoginActivity
 import com.mindorks.bootcamp.instagram.ui.main.MainSharedViewModel
 import com.mindorks.bootcamp.instagram.ui.profile.edit.EditProfileActivity
-import com.mindorks.bootcamp.instagram.utils.common.Constants
-import com.mindorks.bootcamp.instagram.utils.common.GlideHelper
-import com.mindorks.bootcamp.instagram.utils.common.PostClickListener
-import com.mindorks.bootcamp.instagram.utils.common.Receiver
+import com.mindorks.bootcamp.instagram.utils.common.*
+import com.mindorks.bootcamp.instagram.utils.log.Logger
 import kotlinx.android.synthetic.main.fragment_profile.*
 import javax.inject.Inject
 
@@ -113,6 +111,7 @@ class ProfileFragment : BaseFragment<ProfileViewModel>(), PostClickListener {
 
         viewModel.name.observe(this, Observer {
             tvName.text = it
+            mainSharedViewModel.onPostChange(NotifyFor.name(it), Receiver.BOTH)
         })
 
         viewModel.bio.observe(this, Observer {
@@ -140,6 +139,8 @@ class ProfileFragment : BaseFragment<ProfileViewModel>(), PostClickListener {
 
         mainSharedViewModel.notifyProfile.observe(this, Observer {
             it.getIfNotHandled()?.run {
+                Logger.d(TAG, "notifyProfile observer")
+                Logger.d(TAG, "OBSERVER: ${this.state}")
                 viewModel.onPostChange(this)
             }
         })

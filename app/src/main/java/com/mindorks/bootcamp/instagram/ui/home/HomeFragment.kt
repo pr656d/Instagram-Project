@@ -16,6 +16,7 @@ import com.mindorks.bootcamp.instagram.ui.main.MainSharedViewModel
 import com.mindorks.bootcamp.instagram.utils.common.Constants
 import com.mindorks.bootcamp.instagram.utils.common.PostClickListener
 import com.mindorks.bootcamp.instagram.utils.common.Receiver
+import com.mindorks.bootcamp.instagram.utils.log.Logger
 import kotlinx.android.synthetic.main.fragment_home.*
 import javax.inject.Inject
 
@@ -69,6 +70,7 @@ class HomeFragment : BaseFragment<HomeViewModel>(), PostClickListener {
 
         mainSharedViewModel.notifyHome.observe(this, Observer {
             it.getIfNotHandled()?.run {
+                Logger.d(TAG, "notifyHome observer")
                 viewModel.onPostChange(this)
             }
         })
