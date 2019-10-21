@@ -11,7 +11,6 @@ import com.mindorks.bootcamp.instagram.utils.common.Event
 import com.mindorks.bootcamp.instagram.utils.common.Notify
 import com.mindorks.bootcamp.instagram.utils.common.NotifyFor
 import com.mindorks.bootcamp.instagram.utils.common.Resource
-import com.mindorks.bootcamp.instagram.utils.log.Logger
 import com.mindorks.bootcamp.instagram.utils.network.NetworkHelper
 import com.mindorks.bootcamp.instagram.utils.rx.SchedulerProvider
 import io.reactivex.disposables.CompositeDisposable
@@ -90,7 +89,6 @@ class HomeViewModel(
     }
 
     private fun onNameChange(newName: String) {
-        Logger.d(HomeFragment.TAG, "onNameChange")
         allPostList.run {
             forEachIndexed { i, p ->
                 // Find post and replace with new Post

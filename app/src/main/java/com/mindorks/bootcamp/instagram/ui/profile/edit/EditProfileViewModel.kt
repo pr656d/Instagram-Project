@@ -78,7 +78,7 @@ class EditProfileViewModel(
 
         val newProfile = Profile(profile.id, name, profilePicUrl, bio)
 
-        if (profile != newProfile)
+        if (profile != newProfile && checkInternetConnectionWithMessage())
             compositeDisposable.add(
                 profileRepository.updateProfile(
                     user, newProfile.name, newProfile.profilePicUrl, newProfile.bio
@@ -104,26 +104,28 @@ class EditProfileViewModel(
     private fun fetchProfile() {
         loading.postValue(true)
 
-        compositeDisposable.add(
-            profileRepository.fetchProfile(user)
-                .subscribeOn(schedulerProvider.io())
-                .subscribe(
-                    {
-                        profile = Profile(it.id, it.name, it.profilePicUrl, it.bio)
+        if (checkInternetConnectionWithMessage())
+            compositeDisposable.add(
+                profileRepository.fetchProfile(user)
+                    .subscribeOn(schedulerProvider.io())
+                    .subscribe(
+                        {
+                            profile = Profile(it.id, it.name, it.profilePicUrl, it.bio)
 
-                        nameField.postValue(it.name)
-                        emailField.postValue(user.email)
-                        bioField.postValue(it.bio)
-                        profilePicUrl.postValue(it.profilePicUrl)
+                            nameField.postValue(it.name)
+                            emailField.postValue(user.email)
+                            bioField.postValue(it.bio)
+                            profilePicUrl.postValue(it.profilePicUrl)
 
-                        loading.postValue(false)
-                    },
-                    {
-                        handleNetworkError(it)
-                        loading.postValue(false)
-                    }
-                )
-        )
+                            loading.postValue(false)
+                        },
+                        {
+                            handleNetworkError(it)
+                            loading.postValue(false)
+                        }
+                    )
+            )
+        else loading.postValue(false)
     }
 
     fun onGalleryImageSelected(inputStream: InputStream) {
@@ -175,19 +177,22 @@ class EditProfileViewModel(
         )
     }
 
-    private fun uploadPhoto(imageFile: File) =
-        compositeDisposable.add(
-            photoRepository.uploadPhoto(imageFile, user)
-                .subscribeOn(schedulerProvider.io())
-                .subscribe(
-                    {
-                        profilePicUrl.postValue(it)
-                        loading.postValue(false)
-                    },
-                    {
-                        handleNetworkError(it)
-                        loading.postValue(false)
-                    }
-                )
-        )
+    private fun uploadPhoto(imageFile: File) {
+        if (checkInternetConnectionWithMessage())
+            compositeDisposable.add(
+                photoRepository.uploadPhoto(imageFile, user)
+                    .subscribeOn(schedulerProvider.io())
+                    .subscribe(
+                        {
+                            profilePicUrl.postValue(it)
+                            loading.postValue(false)
+                        },
+                        {
+                            handleNetworkError(it)
+                            loading.postValue(false)
+                        }
+                    )
+            )
+        else loading.postValue(false)
+    }
 }

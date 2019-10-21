@@ -56,7 +56,7 @@
 
     <!--  Liked By  -->
     <string name="liked_by">Liked By</string>
-    <string name="no_likes_message">You\'ll be liked soon</string>
+    <string name="no_likes_message">No likes yet</string>
 
     <!--  photo  -->
     <string name="camera">Camera</string>

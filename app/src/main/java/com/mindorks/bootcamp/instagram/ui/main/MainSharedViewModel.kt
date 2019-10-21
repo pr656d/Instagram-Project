@@ -42,7 +42,5 @@ class MainSharedViewModel(
 
     fun onHomeRedirect() = homeRedirection.postValue(Event(true))
 
-    fun onLogout() {
-        logout.postValue(Event(true))
-    }
+    fun onLogout() = logout.postValue(Event(true))
 }

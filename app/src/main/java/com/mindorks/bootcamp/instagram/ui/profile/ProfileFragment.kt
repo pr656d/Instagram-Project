@@ -20,7 +20,6 @@ import com.mindorks.bootcamp.instagram.ui.login.LoginActivity
 import com.mindorks.bootcamp.instagram.ui.main.MainSharedViewModel
 import com.mindorks.bootcamp.instagram.ui.profile.edit.EditProfileActivity
 import com.mindorks.bootcamp.instagram.utils.common.*
-import com.mindorks.bootcamp.instagram.utils.log.Logger
 import kotlinx.android.synthetic.main.fragment_profile.*
 import javax.inject.Inject
 
@@ -101,6 +100,8 @@ class ProfileFragment : BaseFragment<ProfileViewModel>(), PostClickListener {
                         .apply(RequestOptions.placeholderOf(R.drawable.ic_profile_unselected))
                 }
                 glideRequest.into(ivProfile)
+
+                mainSharedViewModel.onPostChange(NotifyFor.profileImage(url), Receiver.BOTH)
             }
         })
 
@@ -139,8 +140,6 @@ class ProfileFragment : BaseFragment<ProfileViewModel>(), PostClickListener {
 
         mainSharedViewModel.notifyProfile.observe(this, Observer {
             it.getIfNotHandled()?.run {
-                Logger.d(TAG, "notifyProfile observer")
-                Logger.d(TAG, "OBSERVER: ${this.state}")
                 viewModel.onPostChange(this)
             }
         })

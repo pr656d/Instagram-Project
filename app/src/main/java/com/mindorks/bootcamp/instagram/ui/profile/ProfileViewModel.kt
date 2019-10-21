@@ -64,22 +64,24 @@ class ProfileViewModel(
     fun refreshProfileData() {
         loading.postValue(true)
 
-        compositeDisposable.add(
-            profileRepository.fetchProfile(user)
-                .subscribeOn(schedulerProvider.io())
-                .subscribe(
-                    {
-                        name.postValue(it.name)
-                        bio.postValue(it.bio)
-                        profilePicUrl.postValue(it.profilePicUrl)
+        if (checkInternetConnectionWithMessage())
+            compositeDisposable.add(
+                profileRepository.fetchProfile(user)
+                    .subscribeOn(schedulerProvider.io())
+                    .subscribe(
+                        {
+                            if (name.value != it.name) name.postValue(it.name)
+                            if (bio.value != it.bio) bio.postValue(it.bio)
+                            if (profilePicUrl.value != it.profilePicUrl) profilePicUrl.postValue(it.profilePicUrl)
 
-                        loading.postValue(false)
-                    },
-                    {
-                        handleNetworkError(it)
-                    }
-                )
-        )
+                            loading.postValue(false)
+                        },
+                        {
+                            handleNetworkError(it)
+                        }
+                    )
+            )
+        else loading.postValue(false)
     }
 
     private fun onNewPost(post: Post) {
@@ -170,73 +172,77 @@ class ProfileViewModel(
     fun onLogoutClicked() {
         loggingOut.postValue(true)
 
-        compositeDisposable.add(
-            userRepository.doLogout(user)
-                .subscribeOn(schedulerProvider.io())
-                .subscribe(
-                    { status ->
-                        if (status) {
-                            userRepository.removeCurrentUser()
-                            launchLogout.postValue(Event(Unit))
+        if (checkInternetConnectionWithMessage())
+            compositeDisposable.add(
+                userRepository.doLogout(user)
+                    .subscribeOn(schedulerProvider.io())
+                    .subscribe(
+                        { status ->
+                            if (status) {
+                                userRepository.removeCurrentUser()
+                                launchLogout.postValue(Event(Unit))
+                            }
+                            loggingOut.postValue(false)
+                        },
+                        {
+                            handleNetworkError(it)
+                            loggingOut.postValue(false)
                         }
-                        loggingOut.postValue(false)
-                    },
-                    {
-                        handleNetworkError(it)
-                        loggingOut.postValue(false)
-                    }
-                )
-        )
+                    )
+            )
+        else loggingOut.postValue(false)
     }
 
     private fun fetchProfile() {
         loading.postValue(true)
         myPostsList.clear() // Just to be sure we have empty list before fetching
 
-        compositeDisposable.addAll(
-            profileRepository.fetchProfile(user)
-                .subscribeOn(schedulerProvider.io())
-                .subscribe(
-                    {
-                        name.postValue(it.name)
-                        bio.postValue(it.bio)
-                        profilePicUrl.postValue(it.profilePicUrl)
-                    },
-                    {
-                        handleNetworkError(it)
-                    }
-                ),
-            postRepository.fetchMyPostList(user)
-                .doAfterSuccess { if (it.count() == 0) loading.postValue(false) }
-                .subscribeOn(schedulerProvider.io())
-                .subscribe(
-                    { myPosts ->
-                        myPosts.forEach { myPost ->
-                            postRepository.fetchPostDetail(myPost, user)
-                                .doFinally {
-                                    // Checks for all requests are completed
-                                    if (myPosts.count() == myPostsList.count()) {
-                                        myPostsList.sortBy { it.createdAt }
-                                        refreshPosts.postValue(Resource.success(myPostsList))
-                                        loading.postValue(false)
-                                    }
-                                }
-                                .subscribeOn(schedulerProvider.io())
-                                .subscribe(
-                                    { post -> myPostsList.add(post) },
-                                    {
-                                        handleNetworkError(it)
-                                        loading.postValue(false)
-                                    }
-                                )
+        if (checkInternetConnectionWithMessage())
+            compositeDisposable.addAll(
+                profileRepository.fetchProfile(user)
+                    .subscribeOn(schedulerProvider.io())
+                    .subscribe(
+                        {
+                            name.postValue(it.name)
+                            bio.postValue(it.bio)
+                            profilePicUrl.postValue(it.profilePicUrl)
+                        },
+                        {
+                            handleNetworkError(it)
                         }
-                    },
-                    {
-                        handleNetworkError(it)
-                        loading.postValue(false)
-                    }
-                )
-        )
+                    ),
+                postRepository.fetchMyPostList(user)
+                    .doAfterSuccess { if (it.count() == 0) loading.postValue(false) }
+                    .subscribeOn(schedulerProvider.io())
+                    .subscribe(
+                        { myPosts ->
+                            myPosts.forEach { myPost ->
+                                postRepository.fetchPostDetail(myPost, user)
+                                    .doFinally {
+                                        // Checks for all requests are completed
+                                        if (myPosts.count() == myPostsList.count()) {
+                                            myPostsList.sortBy { it.createdAt }
+                                            refreshPosts.postValue(Resource.success(myPostsList))
+                                            loading.postValue(false)
+                                        }
+                                    }
+                                    .subscribeOn(schedulerProvider.io())
+                                    .subscribe(
+                                        { post -> myPostsList.add(post) },
+                                        {
+                                            handleNetworkError(it)
+                                            loading.postValue(false)
+                                        }
+                                    )
+                            }
+                        },
+                        {
+                            handleNetworkError(it)
+                            loading.postValue(false)
+                        }
+                    )
+            )
+        else loading.postValue(false)
     }
 }
 
