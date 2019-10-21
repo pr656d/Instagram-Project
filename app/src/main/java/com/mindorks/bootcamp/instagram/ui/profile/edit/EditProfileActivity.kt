@@ -16,7 +16,6 @@ import com.mindorks.bootcamp.instagram.ui.common.dialog.LoadingDialog
 import com.mindorks.bootcamp.instagram.utils.common.Constants
 import com.mindorks.bootcamp.instagram.utils.common.GlideHelper
 import com.mindorks.bootcamp.instagram.utils.common.SelectPhotoDialogListener
-import com.mindorks.bootcamp.instagram.utils.log.Logger
 import com.mindorks.paracamera.Camera
 import kotlinx.android.synthetic.main.activity_edit_profile.*
 import java.io.FileNotFoundException
@@ -138,13 +137,10 @@ class EditProfileActivity : BaseActivity<EditProfileViewModel>(), SelectPhotoDia
         })
 
         viewModel.loading.observe(this, Observer {
-            Logger.d(TAG, "BOOLEAN : $it")
             if (it) {
-                Logger.d(TAG, "SHOWING")
                 loadingDialog.show(supportFragmentManager, LoadingDialog.TAG)
             }
             else try {
-                Logger.d(TAG, "DISMISS")
                 loadingDialog.dismiss()
             } catch (e: NullPointerException) {
                 // Sometime this happens

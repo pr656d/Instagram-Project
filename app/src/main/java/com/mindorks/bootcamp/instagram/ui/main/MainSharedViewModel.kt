@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import com.mindorks.bootcamp.instagram.data.model.Post
 import com.mindorks.bootcamp.instagram.ui.base.BaseViewModel
 import com.mindorks.bootcamp.instagram.utils.common.Event
-import com.mindorks.bootcamp.instagram.utils.common.NotifyPostChange
+import com.mindorks.bootcamp.instagram.utils.common.NotifyFor
 import com.mindorks.bootcamp.instagram.utils.common.Receiver
 import com.mindorks.bootcamp.instagram.utils.network.NetworkHelper
 import com.mindorks.bootcamp.instagram.utils.rx.SchedulerProvider
@@ -20,13 +20,13 @@ class MainSharedViewModel(
 
     val homeRedirection = MutableLiveData<Event<Boolean>>()
 
-    val notifyHome: MutableLiveData<Event<NotifyPostChange<Post>>> = MutableLiveData()
+    val notifyHome: MutableLiveData<Event<NotifyFor<Post>>> = MutableLiveData()
 
-    val notifyProfile: MutableLiveData<Event<NotifyPostChange<Post>>> = MutableLiveData()
+    val notifyProfile: MutableLiveData<Event<NotifyFor<Post>>> = MutableLiveData()
 
     val logout: MutableLiveData<Event<Boolean>> = MutableLiveData()
 
-    fun onPostChange(change: NotifyPostChange<Post>, receiver: Receiver) {
+    fun onPostChange(change: NotifyFor<Post>, receiver: Receiver) {
         when (receiver) {
             Receiver.HOME -> {
                 notifyHome.postValue(Event(change))

@@ -12,9 +12,9 @@ import com.mindorks.bootcamp.instagram.data.repository.ProfileRepository
 import com.mindorks.bootcamp.instagram.data.repository.UserRepository
 import com.mindorks.bootcamp.instagram.ui.base.BaseViewModel
 import com.mindorks.bootcamp.instagram.ui.likedby.LikedByParcelize
-import com.mindorks.bootcamp.instagram.utils.common.ChangeState
 import com.mindorks.bootcamp.instagram.utils.common.Event
-import com.mindorks.bootcamp.instagram.utils.common.NotifyPostChange
+import com.mindorks.bootcamp.instagram.utils.common.Notify
+import com.mindorks.bootcamp.instagram.utils.common.NotifyFor
 import com.mindorks.bootcamp.instagram.utils.common.Resource
 import com.mindorks.bootcamp.instagram.utils.network.NetworkHelper
 import com.mindorks.bootcamp.instagram.utils.rx.SchedulerProvider
@@ -38,12 +38,12 @@ class ProfileViewModel(
         Pair(Networking.HEADER_ACCESS_TOKEN, user.accessToken)
     )
 
-    val launchLogout: MutableLiveData<Event<Map<String, String>>> = MutableLiveData()
+    val launchLogout: MutableLiveData<Event<Unit>> = MutableLiveData()
     val launchEditProfile: MutableLiveData<Event<User>> = MutableLiveData()
     val openLikedBy: MutableLiveData<Event<LikedByParcelize>> = MutableLiveData()
 
     val loading: MutableLiveData<Boolean> = MutableLiveData()
-    val loggingOut: MutableLiveData<Resource<Boolean>> = MutableLiveData()
+    val loggingOut: MutableLiveData<Boolean> = MutableLiveData()
     val name: MutableLiveData<String> = MutableLiveData()
     val bio: MutableLiveData<String> = MutableLiveData()
     val profilePicUrl: MutableLiveData<String> = MutableLiveData()
@@ -52,7 +52,7 @@ class ProfileViewModel(
     }
     val refreshPosts: MutableLiveData<Resource<List<Post>>> = MutableLiveData()
     val postsCount: LiveData<Int> = Transformations.map(refreshPosts) { it.data?.count() }
-    val notifyHome: MutableLiveData<Event<NotifyPostChange<Post>>> = MutableLiveData()
+    val notifyHome: MutableLiveData<Event<NotifyFor<Post>>> = MutableLiveData()
 
     override fun onCreate() {
         fetchProfile()
@@ -60,7 +60,25 @@ class ProfileViewModel(
 
     fun onEditProfileClicked() = launchEditProfile.postValue(Event(user))
 
-    fun refreshProfileData() = fetchProfile()
+    fun refreshProfileData() {
+        loading.postValue(true)
+        compositeDisposable.add(
+            profileRepository.fetchProfile(user)
+                .subscribeOn(schedulerProvider.io())
+                .subscribe(
+                    {
+                        name.postValue(it.name)
+                        bio.postValue(it.bio)
+                        profilePicUrl.postValue(it.profilePicUrl)
+
+                        loading.postValue(false)
+                    },
+                    {
+                        handleNetworkError(it)
+                    }
+                )
+        )
+    }
 
     private fun onNewPost(post: Post) {
         myPostsList.add(0, post)
@@ -69,7 +87,7 @@ class ProfileViewModel(
 
     fun onLikeClick(post: Post, doNotifyHome: Boolean) =
         if (doNotifyHome)
-            notifyHome.postValue(Event(NotifyPostChange.like(post)))
+            notifyHome.postValue(Event(NotifyFor.like(post)))
         else {
             myPostsList.run { forEachIndexed { i, p -> if (p.id == post.id) this[i] = post } }
             refreshPosts.postValue(Resource.success(mutableListOf<Post>().apply { addAll(myPostsList) }))
@@ -78,7 +96,7 @@ class ProfileViewModel(
     fun onDeleteClick(post: Post, doNotifyHome: Boolean) {
         myPostsList.removeAll { it.id == post.id }
         refreshPosts.postValue(Resource.success(myPostsList))
-        if (doNotifyHome) notifyHome.postValue(Event(NotifyPostChange.delete(post)))
+        if (doNotifyHome) notifyHome.postValue(Event(NotifyFor.delete(post)))
     }
 
     fun onLikesCountClick(post: Post) =
@@ -100,18 +118,20 @@ class ProfileViewModel(
             )
         }
 
-    fun onPostChange(change: NotifyPostChange<Post>) {
+    fun onPostChange(change: NotifyFor<Post>) {
         when (change.state) {
-            ChangeState.NEW_POST -> onNewPost(change.data)
+            Notify.NEW_POST -> onNewPost(change.data)
 
-            ChangeState.LIKE -> onLikeClick(change.data, false)
+            Notify.LIKE -> onLikeClick(change.data, false)
 
-            ChangeState.DELETE -> onDeleteClick(change.data, false)
+            Notify.DELETE -> onDeleteClick(change.data, false)
+
+            else -> {}
         }
     }
 
     fun onLogoutClicked() {
-        loggingOut.postValue(Resource.loading(true))
+        loggingOut.postValue(true)
 
         compositeDisposable.add(
             userRepository.doLogout(user)
@@ -120,15 +140,13 @@ class ProfileViewModel(
                     { status ->
                         if (status) {
                             userRepository.removeCurrentUser()
-                            launchLogout.postValue(Event(emptyMap()))
-                            loggingOut.postValue(Resource.loading(false))
-                        } else {
-                            loggingOut.postValue(Resource.error(true))
+                            launchLogout.postValue(Event(Unit))
                         }
+                        loggingOut.postValue(false)
                     },
                     {
                         handleNetworkError(it)
-                        loggingOut.postValue(Resource.loading(false))
+                        loggingOut.postValue(false)
                     }
                 )
         )

@@ -13,12 +13,16 @@ import com.mindorks.bootcamp.instagram.R
 import com.mindorks.bootcamp.instagram.data.model.Post
 import com.mindorks.bootcamp.instagram.di.component.FragmentComponent
 import com.mindorks.bootcamp.instagram.ui.base.BaseFragment
+import com.mindorks.bootcamp.instagram.ui.common.dialog.LoadingDialog
 import com.mindorks.bootcamp.instagram.ui.common.posts.PostsAdapter
 import com.mindorks.bootcamp.instagram.ui.likedby.LikedByActivity
 import com.mindorks.bootcamp.instagram.ui.login.LoginActivity
 import com.mindorks.bootcamp.instagram.ui.main.MainSharedViewModel
 import com.mindorks.bootcamp.instagram.ui.profile.edit.EditProfileActivity
-import com.mindorks.bootcamp.instagram.utils.common.*
+import com.mindorks.bootcamp.instagram.utils.common.Constants
+import com.mindorks.bootcamp.instagram.utils.common.GlideHelper
+import com.mindorks.bootcamp.instagram.utils.common.PostClickListener
+import com.mindorks.bootcamp.instagram.utils.common.Receiver
 import kotlinx.android.synthetic.main.fragment_profile.*
 import javax.inject.Inject
 
@@ -44,6 +48,9 @@ class ProfileFragment : BaseFragment<ProfileViewModel>(), PostClickListener {
 
     @Inject
     lateinit var postsAdapter: PostsAdapter
+
+    @Inject
+    lateinit var loadingDialog: LoadingDialog
 
     override fun provideLayoutId(): Int = R.layout.fragment_profile
 
@@ -100,44 +107,8 @@ class ProfileFragment : BaseFragment<ProfileViewModel>(), PostClickListener {
         })
 
         viewModel.loggingOut.observe(this, Observer {
-            when (it.status) {
-                Status.LOADING -> {
-                    if (it.data!!) {
-                        progressBar.visibility = View.VISIBLE
-
-                        tvLogout.apply {
-                            setText(R.string.logging_out)
-                            isEnabled = false
-                        }
-
-                        btnEditProfile.isEnabled = false
-                    } else {
-                        progressBar.visibility = View.GONE
-
-                        tvLogout.apply {
-                            setText(R.string.logout_profile_text)
-                            isEnabled = true
-                        }
-
-                        btnEditProfile.isEnabled = true
-                    }
-                }
-                Status.ERROR -> {
-                    progressBar.visibility = View.GONE
-
-                    tvLogout.apply {
-                        setText(R.string.logout_profile_text)
-                        isEnabled = true
-                    }
-
-                    btnEditProfile.isEnabled = true
-
-                    showMessage(R.string.logout_error)
-                }
-                else -> {
-                    // Just to ignore enum exhaustive warning for when block
-                }
-            }
+            if (it) loadingDialog.show(fragmentManager, TAG)
+            else loadingDialog.dismiss()
         })
 
         viewModel.name.observe(this, Observer {
@@ -198,6 +169,13 @@ class ProfileFragment : BaseFragment<ProfileViewModel>(), PostClickListener {
         rvPosts.apply {
             layoutManager = linearLayoutManager
             adapter = postsAdapter
+        }
+
+        loadingDialog.apply {
+            isCancelable = false
+            arguments = Bundle().apply {
+                putInt(LoadingDialog.MESSAGE_KEY, R.string.logging_out)
+            }
         }
     }
 

@@ -14,7 +14,7 @@ data class Profile(
 
     @Expose
     @SerializedName("profilePicUrl")
-    val profilePicUrl: String?,
+    val profilePicUrl: String? = null,
 
     @Expose
     @SerializedName("tagline")

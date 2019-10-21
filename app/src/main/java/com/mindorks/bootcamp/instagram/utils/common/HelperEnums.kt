@@ -7,10 +7,15 @@ enum class Status {
     UNKNOWN
 }
 
-enum class ChangeState {
+enum class Notify {
     NEW_POST,
     LIKE,
-    DELETE
+    DELETE,
+    NAME,
+    BIO,
+    PROFILE_IMAGE,
+    REFRESH,
+    NONE
 }
 
 enum class Receiver {

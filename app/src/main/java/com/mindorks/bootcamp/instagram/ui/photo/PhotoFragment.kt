@@ -10,7 +10,7 @@ import com.mindorks.bootcamp.instagram.di.component.FragmentComponent
 import com.mindorks.bootcamp.instagram.ui.base.BaseFragment
 import com.mindorks.bootcamp.instagram.ui.common.dialog.LoadingDialog
 import com.mindorks.bootcamp.instagram.ui.main.MainSharedViewModel
-import com.mindorks.bootcamp.instagram.utils.common.NotifyPostChange
+import com.mindorks.bootcamp.instagram.utils.common.NotifyFor
 import com.mindorks.bootcamp.instagram.utils.common.Receiver
 import com.mindorks.paracamera.Camera
 import kotlinx.android.synthetic.main.fragment_photo.*
@@ -61,7 +61,7 @@ class PhotoFragment : BaseFragment<PhotoViewModel>() {
 
         viewModel.post.observe(this, Observer {
             it.getIfNotHandled()?.run {
-                mainSharedViewModel.onPostChange(NotifyPostChange.newPost(this), Receiver.BOTH)
+                mainSharedViewModel.onPostChange(NotifyFor.newPost(this), Receiver.BOTH)
                 mainSharedViewModel.onHomeRedirect()
             }
         })

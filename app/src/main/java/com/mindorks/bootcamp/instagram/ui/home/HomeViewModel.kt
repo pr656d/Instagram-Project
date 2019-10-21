@@ -7,9 +7,9 @@ import com.mindorks.bootcamp.instagram.data.repository.PostRepository
 import com.mindorks.bootcamp.instagram.data.repository.UserRepository
 import com.mindorks.bootcamp.instagram.ui.base.BaseViewModel
 import com.mindorks.bootcamp.instagram.ui.likedby.LikedByParcelize
-import com.mindorks.bootcamp.instagram.utils.common.ChangeState
 import com.mindorks.bootcamp.instagram.utils.common.Event
-import com.mindorks.bootcamp.instagram.utils.common.NotifyPostChange
+import com.mindorks.bootcamp.instagram.utils.common.Notify
+import com.mindorks.bootcamp.instagram.utils.common.NotifyFor
 import com.mindorks.bootcamp.instagram.utils.common.Resource
 import com.mindorks.bootcamp.instagram.utils.network.NetworkHelper
 import com.mindorks.bootcamp.instagram.utils.rx.SchedulerProvider
@@ -30,7 +30,7 @@ class HomeViewModel(
     val loading: MutableLiveData<Boolean> = MutableLiveData()
     val posts: MutableLiveData<Resource<List<Post>>> = MutableLiveData()
     val refreshPosts: MutableLiveData<Resource<List<Post>>> = MutableLiveData()
-    val notifyProfile: MutableLiveData<Event<NotifyPostChange<Post>>> = MutableLiveData()
+    val notifyProfile: MutableLiveData<Event<NotifyFor<Post>>> = MutableLiveData()
     val openLikedBy: MutableLiveData<Event<LikedByParcelize>> = MutableLiveData()
 
     private var firstId: String? = null
@@ -80,7 +80,7 @@ class HomeViewModel(
     fun onDeleteClick(post: Post, doNotifyProfile: Boolean) {
         allPostList.removeAll { it.id == post.id }
         refreshPosts.postValue(Resource.success(mutableListOf<Post>().apply { addAll(allPostList) }))
-        if (doNotifyProfile) notifyProfile.postValue(Event(NotifyPostChange.delete(post)))
+        if (doNotifyProfile) notifyProfile.postValue(Event(NotifyFor.delete(post)))
     }
 
     private fun onNewPost(post: Post) {
@@ -89,7 +89,7 @@ class HomeViewModel(
     }
 
     fun onLikeClick(post: Post, doNotifyProfile: Boolean) {
-        if (doNotifyProfile) notifyProfile.postValue(Event(NotifyPostChange.like(post)))
+        if (doNotifyProfile) notifyProfile.postValue(Event(NotifyFor.like(post)))
         else {
             allPostList.run { forEachIndexed { i, p -> if (p.id == post.id) this[i] = post } }
             refreshPosts.postValue(Resource.success(mutableListOf<Post>().apply { addAll(allPostList) }))
@@ -115,13 +115,15 @@ class HomeViewModel(
             )
         }
 
-    fun onPostChange(change: NotifyPostChange<Post>) {
+    fun onPostChange(change: NotifyFor<Post>) {
         when (change.state) {
-            ChangeState.NEW_POST -> onNewPost(change.data)
+            Notify.NEW_POST -> onNewPost(change.data)
 
-            ChangeState.LIKE -> onLikeClick(change.data, false)
+            Notify.LIKE -> onLikeClick(change.data, false)
 
-            ChangeState.DELETE -> onDeleteClick(change.data, false)
+            Notify.DELETE -> onDeleteClick(change.data, false)
+
+            else -> {}
         }
     }
 
