@@ -222,8 +222,9 @@ class ProfileViewModel(
                                     .doFinally {
                                         // Checks for all requests are completed
                                         if (myPosts.count() == myPostsList.count()) {
-                                            myPostsList.sortBy { it.createdAt }
+                                            myPostsList.sortByDescending { it.createdAt }
                                             refreshPosts.postValue(Resource.success(myPostsList))
+                                            Logger.d(ProfileFragment.TAG, "$myPostsList")
                                             loading.postValue(false)
                                         }
                                     }
