@@ -1,4 +1,4 @@
-package com.mindorks.bootcamp.instagram.ui.likedby
+package com.mindorks.bootcamp.instagram.ui.liked_by
 
 import android.os.Parcel
 import android.os.Parcelable

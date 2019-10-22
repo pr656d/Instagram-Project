@@ -67,4 +67,13 @@
     <string name="loading">Loading&#8230;</string>
     <string name="uploading_image">Uploading Image&#8230;</string>
     <string name="saving_profile">Saving Profile&#8230;</string>
+
+    <!--  App Information  -->
+    <string name="project_from">Project from</string>
+    <string name="mindorks_link"><a href="https://bootcamp.mindorks.com">MindOrks Professional Bootcamp</a></string>
+    <string name="self_practice">with self practice work</string>
+    <string name="additional_features">and added some additional features</string>
+    <string name="by">by</string>
+    <string name="me"><a href="https://github.com/pr656d">Prem Patel</a></string>
+    <string name="project_github_link"><a href="https://github.com/pr656d/Instagram-Project">View project on Github</a></string>
 </resources>

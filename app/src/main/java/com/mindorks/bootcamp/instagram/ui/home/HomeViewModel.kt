@@ -6,7 +6,7 @@ import com.mindorks.bootcamp.instagram.data.model.User
 import com.mindorks.bootcamp.instagram.data.repository.PostRepository
 import com.mindorks.bootcamp.instagram.data.repository.UserRepository
 import com.mindorks.bootcamp.instagram.ui.base.BaseViewModel
-import com.mindorks.bootcamp.instagram.ui.likedby.LikedByParcelize
+import com.mindorks.bootcamp.instagram.ui.liked_by.LikedByParcelize
 import com.mindorks.bootcamp.instagram.utils.common.Event
 import com.mindorks.bootcamp.instagram.utils.common.Notify
 import com.mindorks.bootcamp.instagram.utils.common.NotifyFor
@@ -31,7 +31,8 @@ class HomeViewModel(
     val posts: MutableLiveData<Resource<List<Post>>> = MutableLiveData()
     val refreshPosts: MutableLiveData<Resource<List<Post>>> = MutableLiveData()
     val notifyProfile: MutableLiveData<Event<NotifyFor<Post>>> = MutableLiveData()
-    val openLikedBy: MutableLiveData<Event<LikedByParcelize>> = MutableLiveData()
+    val launchLikedBy: MutableLiveData<Event<LikedByParcelize>> = MutableLiveData()
+    val launchAppInfo: MutableLiveData<Event<Unit>> = MutableLiveData()
 
     private var firstId: String? = null
     private var lastId: String? = null
@@ -76,6 +77,8 @@ class HomeViewModel(
     override fun onCreate() {
         loadMorePosts()
     }
+
+    fun onAppInfoClick() = launchAppInfo.postValue(Event(Unit))
 
     fun onDeleteClick(post: Post, doNotifyProfile: Boolean) {
         allPostList.removeAll { it.id == post.id }
@@ -126,9 +129,9 @@ class HomeViewModel(
         }
     }
 
-    fun onLikesCountClick(post: Post) =
+    fun onLikesCountClick(post: Post) {
         post.likedBy?.let {
-            openLikedBy.postValue(
+            launchLikedBy.postValue(
                 Event(
                     // Creating Parcelable object to pass to another activity
                     LikedByParcelize(
@@ -144,6 +147,7 @@ class HomeViewModel(
                 )
             )
         }
+    }
 
     fun onPostChange(change: NotifyFor<Any>) {
         when (change.state) {

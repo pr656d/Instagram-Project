@@ -2,7 +2,8 @@ package com.mindorks.bootcamp.instagram.di.component
 
 import com.mindorks.bootcamp.instagram.di.ActivityScope
 import com.mindorks.bootcamp.instagram.di.module.ActivityModule
-import com.mindorks.bootcamp.instagram.ui.likedby.LikedByActivity
+import com.mindorks.bootcamp.instagram.ui.app_info.AppInfoActivity
+import com.mindorks.bootcamp.instagram.ui.liked_by.LikedByActivity
 import com.mindorks.bootcamp.instagram.ui.login.LoginActivity
 import com.mindorks.bootcamp.instagram.ui.main.MainActivity
 import com.mindorks.bootcamp.instagram.ui.profile.edit.EditProfileActivity
@@ -28,4 +29,6 @@ interface ActivityComponent {
     fun inject(activity: EditProfileActivity)
 
     fun inject(activity: LikedByActivity)
+
+    fun inject(activity: AppInfoActivity)
 }

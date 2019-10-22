@@ -9,4 +9,6 @@
     <color name="white">#ffffff</color>
     <color name="grey">#999999</color>
     <color name="grey_light">#AAAAAA</color>
+
+    <color name="hyperlink">#1a0dab</color>
 </resources>

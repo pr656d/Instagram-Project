@@ -14,8 +14,8 @@ import com.mindorks.bootcamp.instagram.data.model.Post
 import com.mindorks.bootcamp.instagram.di.component.FragmentComponent
 import com.mindorks.bootcamp.instagram.ui.base.BaseFragment
 import com.mindorks.bootcamp.instagram.ui.common.dialog.LoadingDialog
-import com.mindorks.bootcamp.instagram.ui.common.posts.PostsAdapter
-import com.mindorks.bootcamp.instagram.ui.likedby.LikedByActivity
+import com.mindorks.bootcamp.instagram.ui.common.recycler_view.posts.PostsAdapter
+import com.mindorks.bootcamp.instagram.ui.liked_by.LikedByActivity
 import com.mindorks.bootcamp.instagram.ui.login.LoginActivity
 import com.mindorks.bootcamp.instagram.ui.main.MainSharedViewModel
 import com.mindorks.bootcamp.instagram.ui.profile.edit.EditProfileActivity
@@ -73,7 +73,7 @@ class ProfileFragment : BaseFragment<ProfileViewModel>(), PostClickListener {
             }
         })
 
-        viewModel.openLikedBy.observe(this, Observer {
+        viewModel.launchLikedBy.observe(this, Observer {
             it.getIfNotHandled()?.run {
                 startActivity(
                     Intent(activity, LikedByActivity::class.java)
@@ -179,17 +179,11 @@ class ProfileFragment : BaseFragment<ProfileViewModel>(), PostClickListener {
         }
     }
 
-    override fun onDeleteClick(post: Post) {
-        viewModel.onDeleteClick(post, true)
-    }
+    override fun onDeleteClick(post: Post) = viewModel.onDeleteClick(post, true)
 
-    override fun onLikeClick(post: Post) {
-        viewModel.onLikeClick(post, true)
-    }
+    override fun onLikeClick(post: Post) = viewModel.onLikeClick(post, true)
 
-    override fun onLikesCountClick(post: Post) {
-        viewModel.onLikesCountClick(post)
-    }
+    override fun onLikesCountClick(post: Post) = viewModel.onLikesCountClick(post)
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

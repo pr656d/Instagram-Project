@@ -6,10 +6,11 @@ import com.mindorks.bootcamp.instagram.data.repository.PhotoRepository
 import com.mindorks.bootcamp.instagram.data.repository.ProfileRepository
 import com.mindorks.bootcamp.instagram.data.repository.UserRepository
 import com.mindorks.bootcamp.instagram.di.TempDirectory
+import com.mindorks.bootcamp.instagram.ui.app_info.AppInfoViewModel
 import com.mindorks.bootcamp.instagram.ui.base.BaseActivity
 import com.mindorks.bootcamp.instagram.ui.common.dialog.LoadingDialog
-import com.mindorks.bootcamp.instagram.ui.likedby.LikedByViewModel
-import com.mindorks.bootcamp.instagram.ui.likedby.list.LikedByAdapter
+import com.mindorks.bootcamp.instagram.ui.liked_by.LikedByViewModel
+import com.mindorks.bootcamp.instagram.ui.liked_by.recycler_view.LikedByAdapter
 import com.mindorks.bootcamp.instagram.ui.login.LoginViewModel
 import com.mindorks.bootcamp.instagram.ui.main.MainSharedViewModel
 import com.mindorks.bootcamp.instagram.ui.main.MainViewModel
@@ -133,6 +134,16 @@ class ActivityModule(private val activity: BaseActivity<*>) {
         activity, ViewModelProviderFactory(MainSharedViewModel::class) {
             MainSharedViewModel(schedulerProvider, compositeDisposable, networkHelper)
         }).get(MainSharedViewModel::class.java)
+
+    @Provides
+    fun provideAppInfoViewModel(
+        schedulerProvider: SchedulerProvider,
+        compositeDisposable: CompositeDisposable,
+        networkHelper: NetworkHelper
+    ): AppInfoViewModel = ViewModelProviders.of(
+        activity, ViewModelProviderFactory(AppInfoViewModel::class) {
+            AppInfoViewModel(schedulerProvider, compositeDisposable, networkHelper)
+        }).get(AppInfoViewModel::class.java)
 
     @Provides
     fun provideCamera() = Camera.Builder()

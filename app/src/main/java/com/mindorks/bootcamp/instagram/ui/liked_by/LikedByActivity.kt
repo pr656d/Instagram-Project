@@ -1,4 +1,4 @@
-package com.mindorks.bootcamp.instagram.ui.likedby
+package com.mindorks.bootcamp.instagram.ui.liked_by
 
 import android.os.Bundle
 import android.view.View
@@ -8,7 +8,7 @@ import com.mindorks.bootcamp.instagram.R
 import com.mindorks.bootcamp.instagram.data.model.Post
 import com.mindorks.bootcamp.instagram.di.component.ActivityComponent
 import com.mindorks.bootcamp.instagram.ui.base.BaseActivity
-import com.mindorks.bootcamp.instagram.ui.likedby.list.LikedByAdapter
+import com.mindorks.bootcamp.instagram.ui.liked_by.recycler_view.LikedByAdapter
 import com.mindorks.bootcamp.instagram.utils.common.Constants
 import com.mindorks.bootcamp.instagram.utils.common.LikedByListListener
 import kotlinx.android.synthetic.main.activity_liked_by.*

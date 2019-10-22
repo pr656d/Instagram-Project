@@ -30,7 +30,8 @@
         <activity android:name=".ui.signup.SignupActivity" />
         <activity android:name=".ui.main.MainActivity" />
         <activity android:name=".ui.profile.edit.EditProfileActivity" />
-        <activity android:name=".ui.likedby.LikedByActivity" />
+        <activity android:name=".ui.liked_by.LikedByActivity" />
+        <activity android:name=".ui.app_info.AppInfoActivity" />
 
     </application>
 </manifest>

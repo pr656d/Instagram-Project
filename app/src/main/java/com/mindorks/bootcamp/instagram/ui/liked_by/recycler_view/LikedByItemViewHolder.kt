@@ -1,4 +1,4 @@
-package com.mindorks.bootcamp.instagram.ui.likedby.list
+package com.mindorks.bootcamp.instagram.ui.liked_by.recycler_view
 
 import android.view.View
 import android.view.ViewGroup

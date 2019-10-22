@@ -1,4 +1,4 @@
-package com.mindorks.bootcamp.instagram.ui.likedby
+package com.mindorks.bootcamp.instagram.ui.liked_by
 
 import androidx.lifecycle.MutableLiveData
 import com.mindorks.bootcamp.instagram.data.model.Post

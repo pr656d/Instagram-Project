@@ -101,7 +101,8 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etName"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:maxLines="1"/>
     </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -118,7 +119,8 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etBio"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:maxLines="5"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <View
@@ -156,7 +158,8 @@
             android:id="@+id/etEmail"
             android:textStyle="bold"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:maxLines="1"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 

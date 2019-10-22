@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/ivLogo"
+        android:layout_width="0dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/instagram_logo"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/tvProjectFrom"
+        style="@style/AppTheme.Headline6"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/project_from"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@+id/tvProjectGithubLink"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.443" />
+
+    <TextView
+        android:id="@+id/tvMindOrksLink"
+        style="@style/AppTheme.Headline6"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/mindorks_link"
+        android:textAlignment="center"
+        android:textColor="@color/hyperlink"
+        app:layout_constraintEnd_toEndOf="@id/tvProjectFrom"
+        app:layout_constraintStart_toStartOf="@id/tvProjectFrom"
+        app:layout_constraintTop_toBottomOf="@+id/tvProjectFrom" />
+
+    <TextView
+        android:id="@+id/tvSelfPractice"
+        style="@style/AppTheme.Headline6"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/self_practice"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="@id/tvProjectFrom"
+        app:layout_constraintStart_toStartOf="@id/tvProjectFrom"
+        app:layout_constraintTop_toBottomOf="@+id/tvMindOrksLink" />
+
+    <TextView
+        android:id="@+id/tvAdditionalFeatures"
+        style="@style/AppTheme.Headline6"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/additional_features"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="@id/tvProjectFrom"
+        app:layout_constraintStart_toStartOf="@id/tvProjectFrom"
+        app:layout_constraintTop_toBottomOf="@+id/tvSelfPractice" />
+
+    <TextView
+        android:id="@+id/tvBy"
+        style="@style/AppTheme.Headline6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="@string/by"
+        android:textAlignment="textEnd"
+        app:layout_constraintEnd_toStartOf="@+id/guideline3"
+        app:layout_constraintTop_toBottomOf="@+id/tvAdditionalFeatures" />
+
+    <TextView
+        android:id="@+id/tvMeLink"
+        style="@style/AppTheme.Headline6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/me"
+        android:textAlignment="textStart"
+        android:textColor="@color/hyperlink"
+        app:layout_constraintStart_toEndOf="@id/tvBy"
+        app:layout_constraintStart_toStartOf="@+id/guideline3"
+        app:layout_constraintTop_toBottomOf="@+id/tvAdditionalFeatures" />
+
+    <TextView
+        android:id="@+id/tvProjectGithubLink"
+        style="@style/AppTheme.Headline6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/project_github_link"
+        android:textColor="@color/hyperlink"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.40" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,7 +9,7 @@ import com.mindorks.bootcamp.instagram.data.repository.UserRepository
 import com.mindorks.bootcamp.instagram.di.TempDirectory
 import com.mindorks.bootcamp.instagram.ui.base.BaseFragment
 import com.mindorks.bootcamp.instagram.ui.common.dialog.LoadingDialog
-import com.mindorks.bootcamp.instagram.ui.common.posts.PostsAdapter
+import com.mindorks.bootcamp.instagram.ui.common.recycler_view.posts.PostsAdapter
 import com.mindorks.bootcamp.instagram.ui.home.HomeViewModel
 import com.mindorks.bootcamp.instagram.ui.main.MainSharedViewModel
 import com.mindorks.bootcamp.instagram.ui.photo.PhotoViewModel

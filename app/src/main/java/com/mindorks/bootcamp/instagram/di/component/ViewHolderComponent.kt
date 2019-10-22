@@ -2,8 +2,8 @@ package com.mindorks.bootcamp.instagram.di.component
 
 import com.mindorks.bootcamp.instagram.di.ViewModelScope
 import com.mindorks.bootcamp.instagram.di.module.ViewHolderModule
-import com.mindorks.bootcamp.instagram.ui.common.posts.PostItemViewHolder
-import com.mindorks.bootcamp.instagram.ui.likedby.list.LikedByItemViewHolder
+import com.mindorks.bootcamp.instagram.ui.common.recycler_view.posts.PostItemViewHolder
+import com.mindorks.bootcamp.instagram.ui.liked_by.recycler_view.LikedByItemViewHolder
 import dagger.Component
 
 @ViewModelScope
