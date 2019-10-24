@@ -27,3 +27,6 @@ Project from [MindOrks Professional Bootcamp](https://bootcamp.mindorks.com/) wi
   - Delete and like post button for post list
   - Loading dialogs
   - Profile view
+
+## Screenshots
+<img src="/screenshots/s1.jpg" height="400">&nbsp;<img src="/screenshots/s2.jpg" height="400">&nbsp;<img src="/screenshots/s3.jpg" height="400">&nbsp;<img src="/screenshots/s4.jpg" height="400">&nbsp;<img src="/screenshots/s5.jpg" height="400">&nbsp;<img src="/screenshots/s6.jpg" height="400">&nbsp;<img src="/screenshots/s7.jpg" height="400">&nbsp;<img src="/screenshots/s8.jpg" height="400">&nbsp;<img src="/screenshots/s9.jpg" height="400">&nbsp;<img src="/screenshots/s10.jpg" height="400">
